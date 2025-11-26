@@ -45,13 +45,13 @@ class FortifyServiceProvider extends ServiceProvider
      */
     private function configureViews(): void
     {
-        Fortify::loginView(fn () => view('livewire.auth.login'));
-        Fortify::verifyEmailView(fn () => view('livewire.auth.verify-email'));
-        Fortify::twoFactorChallengeView(fn () => view('livewire.auth.two-factor-challenge'));
-        Fortify::confirmPasswordView(fn () => view('livewire.auth.confirm-password'));
-        Fortify::registerView(fn () => view('livewire.auth.register'));
-        Fortify::resetPasswordView(fn () => view('livewire.auth.reset-password'));
-        Fortify::requestPasswordResetLinkView(fn () => view('livewire.auth.forgot-password'));
+        Fortify::loginView(fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view('livewire.auth.login'));
+        Fortify::verifyEmailView(fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view('livewire.auth.verify-email'));
+        Fortify::twoFactorChallengeView(fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view('livewire.auth.two-factor-challenge'));
+        Fortify::confirmPasswordView(fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view('livewire.auth.confirm-password'));
+        Fortify::registerView(fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view('livewire.auth.register'));
+        Fortify::resetPasswordView(fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view('livewire.auth.reset-password'));
+        Fortify::requestPasswordResetLinkView(fn (): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View => view('livewire.auth.forgot-password'));
     }
 
     /**
@@ -59,9 +59,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     private function configureRateLimiting(): void
     {
-        RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
-        });
+        RateLimiter::for('two-factor', fn(Request $request) => Limit::perMinute(5)->by($request->session()->get('login.id')));
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
