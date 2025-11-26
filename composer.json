@@ -14,7 +14,8 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "livewire/flux": "^2.1.1",
-        "livewire/volt": "^1.7.0"
+        "livewire/volt": "^1.7.0",
+        "opcodesio/log-viewer": "^3.21"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",
@@ -44,6 +45,7 @@
     "scripts": {
         "pint": "./vendor/bin/pint",
         "rector": "rector",
+        "stan" : "./vendor/bin/phpstan analyse --memory-limit=2G",
         "setup": [
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
