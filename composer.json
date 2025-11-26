@@ -46,6 +46,12 @@
         "pint": "./vendor/bin/pint",
         "rector": "rector",
         "stan" : "./vendor/bin/phpstan analyse --memory-limit=2G",
+        "ide": [
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:models -N",
+            "@php artisan ide-helper:meta",
+            "@php artisan ide-helper:models -W"
+        ],
         "setup": [
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",

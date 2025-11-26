@@ -26,7 +26,6 @@ use Illuminate\Support\Carbon;
  * @property-read PaymentMethod|null $paymentMethod
  * @property-read Collection<int, SalesItem> $salesItems
  * @property-read int|null $sales_items_count
- *
  * @method static SaleFactory factory($count = null, $state = [])
  * @method static Builder<static>|Sale newModelQuery()
  * @method static Builder<static>|Sale newQuery()
@@ -39,7 +38,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Sale wherePaymentMethodId($value)
  * @method static Builder<static>|Sale whereTotal($value)
  * @method static Builder<static>|Sale whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 final class Sale extends Model

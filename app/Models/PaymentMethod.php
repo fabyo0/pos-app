@@ -20,7 +20,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, Sale> $sales
  * @property-read int|null $sales_count
- *
  * @method static PaymentMethodFactory factory($count = null, $state = [])
  * @method static Builder<static>|PaymentMethod newModelQuery()
  * @method static Builder<static>|PaymentMethod newQuery()
@@ -30,7 +29,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PaymentMethod whereId($value)
  * @method static Builder<static>|PaymentMethod whereName($value)
  * @method static Builder<static>|PaymentMethod whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 final class PaymentMethod extends Model

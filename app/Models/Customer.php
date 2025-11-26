@@ -21,7 +21,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, Sale> $sales
  * @property-read int|null $sales_count
- *
  * @method static CustomerFactory factory($count = null, $state = [])
  * @method static Builder<static>|Customer newModelQuery()
  * @method static Builder<static>|Customer newQuery()
@@ -32,7 +31,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Customer whereName($value)
  * @method static Builder<static>|Customer wherePhone($value)
  * @method static Builder<static>|Customer whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 final class Customer extends Model

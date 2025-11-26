@@ -21,7 +21,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Item $item
  * @property-read Sale $sale
- *
  * @method static SalesItemFactory factory($count = null, $state = [])
  * @method static Builder<static>|SalesItem newModelQuery()
  * @method static Builder<static>|SalesItem newQuery()
@@ -33,7 +32,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|SalesItem whereQuantity($value)
  * @method static Builder<static>|SalesItem whereSaleId($value)
  * @method static Builder<static>|SalesItem whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 final class SalesItem extends Model

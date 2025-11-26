@@ -18,7 +18,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Item $item
- *
  * @method static InventoryFactory factory($count = null, $state = [])
  * @method static Builder<static>|Inventory newModelQuery()
  * @method static Builder<static>|Inventory newQuery()
@@ -28,7 +27,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Inventory whereItemId($value)
  * @method static Builder<static>|Inventory whereQuantity($value)
  * @method static Builder<static>|Inventory whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 final class Inventory extends Model

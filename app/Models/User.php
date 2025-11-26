@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\RoleType;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,7 +31,6 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $updated_at
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- *
  * @method static UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
@@ -46,13 +46,15 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @method static Builder<static>|User whereTwoFactorRecoveryCodes($value)
  * @method static Builder<static>|User whereTwoFactorSecret($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
- *
+ * @property RoleType $role
+ * @method static Builder<static>|User whereRole($value)
  * @mixin \Eloquent
  */
 final class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use Notifiable;
     use TwoFactorAuthenticatable;
 
@@ -65,6 +67,7 @@ final class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -91,6 +94,16 @@ final class User extends Authenticatable
             ->implode('');
     }
 
+    public function isAdmin(): bool
+    {
+        return self::$role === RoleType::ADMIN->value;
+    }
+
+    public function isCashier(): bool
+    {
+        return self::$role === RoleType::CASHIER->value;
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -101,6 +114,7 @@ final class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => RoleType::class,
         ];
     }
 }

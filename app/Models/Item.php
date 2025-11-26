@@ -26,7 +26,6 @@ use Illuminate\Support\Carbon;
  * @property-read Inventory|null $inventory
  * @property-read Collection<int, SalesItem> $salesItems
  * @property-read int|null $sales_items_count
- *
  * @method static Builder<static>|Item active()
  * @method static ItemFactory factory($count = null, $state = [])
  * @method static Builder<static>|Item inactive()
@@ -40,7 +39,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Item whereSku($value)
  * @method static Builder<static>|Item whereStatus($value)
  * @method static Builder<static>|Item whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 final class Item extends Model
