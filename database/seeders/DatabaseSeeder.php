@@ -34,9 +34,11 @@ final class DatabaseSeeder extends Seeder
             ]);
         });
 
-        User::factory()->withoutTwoFactor()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::factory(10)->cashier()->withoutTwoFactor()->create();
+
+        User::factory()->admin()->withoutTwoFactor()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
             'password' => Hash::make('123'),
         ]);
     }

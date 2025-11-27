@@ -2,11 +2,9 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/livewire-starter-kit",
     "type": "project",
-    "description": "The official Laravel starter kit for Livewire.",
-    "keywords": [
-        "laravel",
-        "framework"
-    ],
+    "author": "Emre Dikmen",
+    "description": "Pos System",
+    "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -15,7 +13,15 @@
         "laravel/tinker": "^2.10.1",
         "livewire/flux": "^2.1.1",
         "livewire/volt": "^1.7.0",
-        "opcodesio/log-viewer": "^3.21"
+        "opcodesio/log-viewer": "^3.21",
+        "filament/actions": "^4.0",
+        "filament/forms": "^4.0",
+        "filament/notifications": "^4.0",
+        "filament/schemas": "^4.0",
+        "filament/support": "^4.0",
+        "filament/tables": "^4.0",
+        "filament/widgets": "^4.0",
+        "filament/infolists": "^4.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",
@@ -45,7 +51,7 @@
     "scripts": {
         "pint": "./vendor/bin/pint",
         "rector": "rector",
-        "stan" : "./vendor/bin/phpstan analyse --memory-limit=2G",
+        "stan": "./vendor/bin/phpstan analyse --memory-limit=2G",
         "ide": [
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:models -N",
@@ -70,7 +76,8 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
