@@ -96,12 +96,12 @@ final class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return self::$role == RoleType::ADMIN->value;
+        return self::$role === RoleType::ADMIN->value;
     }
 
     public function isCashier(): bool
     {
-        return self::$role == RoleType::CASHIER->value;
+        return self::$role === RoleType::CASHIER->value;
     }
 
     /**
