@@ -15,7 +15,6 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property string $name
- * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, Sale> $sales
@@ -38,8 +37,15 @@ final class PaymentMethod extends Model
 
     protected $fillable = [
         'name',
-        'description',
+        'is_active',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean'
+        ];
+    }
 
     public function sales(): HasMany
     {

@@ -10,7 +10,6 @@ use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
@@ -45,18 +44,18 @@ final class ListItems extends Component implements HasActions, HasSchemas, HasTa
                 ToggleColumn::make('status')
                     ->onColor('success')
                     ->offColor('danger')
-                    ->updateStateUsing(function ($record, $state) {
+                    ->updateStateUsing(function ($record, $state): void {
                         $record->status = $state ? ItemStatus::ACTIVE : ItemStatus::INACTIVE;
                         $record->save();
 
                         // Notification Message
-                      /*  Notification::make()
-                            ->title('Status updated!')
-                            ->success()
-                            ->color('success')
-                            ->send();*/
+                        /*  Notification::make()
+                              ->title('Status updated!')
+                              ->success()
+                              ->color('success')
+                              ->send();*/
                     })
-                    ->getStateUsing(fn($record) => $record->status === ItemStatus::ACTIVE),
+                    ->getStateUsing(fn($record): bool => $record->status === ItemStatus::ACTIVE),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -37,6 +38,7 @@ final class Customer extends Model
 {
     /** @use HasFactory<CustomerFactory> */
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',

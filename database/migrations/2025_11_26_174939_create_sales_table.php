@@ -27,6 +27,7 @@ return new class () extends Migration {
             $table->decimal('total');
             $table->decimal('paid_amount');
             $table->decimal('discount')->default(0.0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

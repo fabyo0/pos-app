@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -44,6 +45,7 @@ final class Sale extends Model
 {
     /** @use HasFactory<SaleFactory> */
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'customer_id',
@@ -52,15 +54,6 @@ final class Sale extends Model
         'paid_amount',
         'discount',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'total' => 'decimal:2',
-            'paid_amount' => 'decimal:2',
-            'discount' => 'decimal:2',
-        ];
-    }
 
     public function customer(): BelongsTo
     {
@@ -75,5 +68,14 @@ final class Sale extends Model
     public function salesItems(): HasMany
     {
         return $this->hasMany(related: SalesItem::class, foreignKey: 'sale_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'total' => 'decimal:2',
+            'paid_amount' => 'decimal:2',
+            'discount' => 'decimal:2',
+        ];
     }
 }

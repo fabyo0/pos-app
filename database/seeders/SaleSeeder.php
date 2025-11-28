@@ -1,15 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-use App\Models\Customer;
 use App\Models\Item;
 use App\Models\Sale;
 use App\Models\SalesItem;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SaleSeeder extends Seeder
+final class SaleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,12 +18,12 @@ class SaleSeeder extends Seeder
     {
         Sale::factory(30)
             ->create()
-            ->each(function (Sale $sale) {
-                $items = Item::factory(rand(1, 5))->create();
+            ->each(function (Sale $sale): void {
+                $items = Item::factory(random_int(1, 5))->create();
                 $total = 0;
 
                 foreach ($items as $item) {
-                    $quantity = rand(1, 3);
+                    $quantity = random_int(1, 3);
                     SalesItem::factory()->create([
                         'sale_id' => $sale->id,
                         'item_id' => $item->id,

@@ -23,8 +23,12 @@ final class PaymentMethodFactory extends Factory
     {
         return [
             'name' => $this->faker->randomElement(['Cash', 'Card', 'Mobile Money']),
-            'description' => $this->faker->optional()->sentence(),
-
+            'is_active' => true
         ];
+    }
+
+    public function inactive(): self
+    {
+        return $this->state(['is_active' => false]);
     }
 }
