@@ -53,6 +53,13 @@ final class Item extends Model
         'status',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'status' => ItemStatus::class,
+        ];
+    }
+
     public function inventory(): HasOne
     {
         return $this->hasOne(related: Inventory::class, foreignKey: 'item_id');
@@ -61,13 +68,6 @@ final class Item extends Model
     public function salesItems(): HasMany
     {
         return $this->hasMany(related: SalesItem::class, foreignKey: 'item_id');
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'status' => ItemStatus::class,
-        ];
     }
 
     #[Scope]

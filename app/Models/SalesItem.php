@@ -46,6 +46,13 @@ final class SalesItem extends Model
         'price',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'price' => 'decimal:2',
+        ];
+    }
+
     public function sale(): BelongsTo
     {
         return $this->belongsTo(related: Sale::class, foreignKey: 'sale_id');
@@ -54,12 +61,5 @@ final class SalesItem extends Model
     public function item(): BelongsTo
     {
         return $this->belongsTo(related: Item::class, foreignKey: 'item_id');
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'price' => 'decimal',
-        ];
     }
 }

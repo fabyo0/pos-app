@@ -53,6 +53,15 @@ final class Sale extends Model
         'discount',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'total' => 'decimal:2',
+            'paid_amount' => 'decimal:2',
+            'discount' => 'decimal:2',
+        ];
+    }
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(related: Customer::class, foreignKey: 'customer_id');
@@ -66,14 +75,5 @@ final class Sale extends Model
     public function salesItems(): HasMany
     {
         return $this->hasMany(related: SalesItem::class, foreignKey: 'sale_id');
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'total' => 'decimal',
-            'paid_amount' => 'decimal',
-            'discount' => 'decimal',
-        ];
     }
 }

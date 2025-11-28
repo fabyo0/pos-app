@@ -33,6 +33,7 @@ final class ListInventories extends Component implements HasActions, HasSchemas,
                     ->searchable(),
                 TextColumn::make('quantity')
                     ->numeric()
+                    ->badge()
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

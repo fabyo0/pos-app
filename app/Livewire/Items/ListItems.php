@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Livewire\Items;
 
+use App\Enums\ItemStatus;
 use App\Models\Item;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
@@ -38,9 +42,21 @@ final class ListItems extends Component implements HasActions, HasSchemas, HasTa
                 TextColumn::make('price')
                     ->money()
                     ->sortable(),
-                TextColumn::make('status')
-                    ->badge()
-                    ->searchable(),
+                ToggleColumn::make('status')
+                    ->onColor('success')
+                    ->offColor('danger')
+                    ->updateStateUsing(function ($record, $state) {
+                        $record->status = $state ? ItemStatus::ACTIVE : ItemStatus::INACTIVE;
+                        $record->save();
+
+                        // Notification Message
+                      /*  Notification::make()
+                            ->title('Status updated!')
+                            ->success()
+                            ->color('success')
+                            ->send();*/
+                    })
+                    ->getStateUsing(fn($record) => $record->status === ItemStatus::ACTIVE),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
