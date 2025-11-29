@@ -31,6 +31,30 @@ namespace App\Models{
  * @method static Builder<static>|Customer whereName($value)
  * @method static Builder<static>|Customer wherePhone($value)
  * @method static Builder<static>|Customer whereUpdatedAt($value)
+ * @property Carbon|null $deleted_at
+ * @method static Builder<static>|Customer onlyTrashed()
+ * @method static Builder<static>|Customer whereDeletedAt($value)
+ * @method static Builder<static>|Customer withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Customer withoutTrashed()
+ * @property string|null $company_name
+ * @property string|null $tax_id
+ * @property string|null $address
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $postal_code
+ * @property string|null $country
+ * @property bool $is_active
+ * @property string|null $notes
+ * @property-read string|null $full_address
+ * @method static Builder<static>|Customer whereAddress($value)
+ * @method static Builder<static>|Customer whereCity($value)
+ * @method static Builder<static>|Customer whereCompanyName($value)
+ * @method static Builder<static>|Customer whereCountry($value)
+ * @method static Builder<static>|Customer whereIsActive($value)
+ * @method static Builder<static>|Customer whereNotes($value)
+ * @method static Builder<static>|Customer wherePostalCode($value)
+ * @method static Builder<static>|Customer whereState($value)
+ * @method static Builder<static>|Customer whereTaxId($value)
  * @mixin \Eloquent
  */
 	final class Customer extends \Eloquent {}
@@ -92,7 +116,6 @@ namespace App\Models{
 /**
  * @property int $id
  * @property string $name
- * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, Sale> $sales
@@ -106,6 +129,10 @@ namespace App\Models{
  * @method static Builder<static>|PaymentMethod whereId($value)
  * @method static Builder<static>|PaymentMethod whereName($value)
  * @method static Builder<static>|PaymentMethod whereUpdatedAt($value)
+ * @property bool $is_active
+ * @method static Builder<static>|PaymentMethod whereIsActive($value)
+ * @method static Builder<static>|PaymentMethod active()
+ * @method static Builder<static>|PaymentMethod inactive()
  * @mixin \Eloquent
  */
 	final class PaymentMethod extends \Eloquent {}
@@ -137,6 +164,11 @@ namespace App\Models{
  * @method static Builder<static>|Sale wherePaymentMethodId($value)
  * @method static Builder<static>|Sale whereTotal($value)
  * @method static Builder<static>|Sale whereUpdatedAt($value)
+ * @property Carbon|null $deleted_at
+ * @method static Builder<static>|Sale onlyTrashed()
+ * @method static Builder<static>|Sale whereDeletedAt($value)
+ * @method static Builder<static>|Sale withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Sale withoutTrashed()
  * @mixin \Eloquent
  */
 	final class Sale extends \Eloquent {}
@@ -164,6 +196,8 @@ namespace App\Models{
  * @method static Builder<static>|SalesItem whereQuantity($value)
  * @method static Builder<static>|SalesItem whereSaleId($value)
  * @method static Builder<static>|SalesItem whereUpdatedAt($value)
+ * @property string|null $deleted_at
+ * @method static Builder<static>|SalesItem whereDeletedAt($value)
  * @mixin \Eloquent
  */
 	final class SalesItem extends \Eloquent {}
@@ -199,9 +233,14 @@ namespace App\Models{
  * @method static Builder<static>|User whereTwoFactorRecoveryCodes($value)
  * @method static Builder<static>|User whereTwoFactorSecret($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
+ * @property RoleType $role
+ * @method static Builder<static>|User whereRole($value)
+ * @property Carbon|null $deleted_at
+ * @method static Builder<static>|User onlyTrashed()
+ * @method static Builder<static>|User whereDeletedAt($value)
+ * @method static Builder<static>|User withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|User withoutTrashed()
  * @mixin \Eloquent
- * @property \App\Enums\RoleType $role
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRole($value)
  */
 	final class User extends \Eloquent {}
 }

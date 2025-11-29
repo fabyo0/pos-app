@@ -57,7 +57,7 @@ test('user can delete their account', function (): void {
         ->assertHasNoErrors()
         ->assertRedirect('/');
 
-    expect($user->fresh())->toBeNull();
+    expect($user->fresh()?->trashed())->toBeTrue();
     expect(auth()->check())->toBeFalse();
 });
 

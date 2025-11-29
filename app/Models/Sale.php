@@ -39,12 +39,18 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Sale wherePaymentMethodId($value)
  * @method static Builder<static>|Sale whereTotal($value)
  * @method static Builder<static>|Sale whereUpdatedAt($value)
+ * @property Carbon|null $deleted_at
+ * @method static Builder<static>|Sale onlyTrashed()
+ * @method static Builder<static>|Sale whereDeletedAt($value)
+ * @method static Builder<static>|Sale withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Sale withoutTrashed()
  * @mixin \Eloquent
  */
 final class Sale extends Model
 {
     /** @use HasFactory<SaleFactory> */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [

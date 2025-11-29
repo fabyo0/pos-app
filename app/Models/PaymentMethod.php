@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\PaymentMethodFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,6 +29,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|PaymentMethod whereId($value)
  * @method static Builder<static>|PaymentMethod whereName($value)
  * @method static Builder<static>|PaymentMethod whereUpdatedAt($value)
+ * @property bool $is_active
+ * @method static Builder<static>|PaymentMethod whereIsActive($value)
+ * @method static Builder<static>|PaymentMethod active()
+ * @method static Builder<static>|PaymentMethod inactive()
  * @mixin \Eloquent
  */
 final class PaymentMethod extends Model
@@ -40,15 +45,27 @@ final class PaymentMethod extends Model
         'is_active',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'is_active' => 'boolean'
-        ];
-    }
-
     public function sales(): HasMany
     {
         return $this->hasMany(related: Sale::class, foreignKey: 'payment_method_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
+
+    #[Scope]
+    protected function active(Builder $query): void
+    {
+        $query->where('is_active', true);
+    }
+
+    #[Scope]
+    protected function inactive(Builder $query): void
+    {
+        $query->where('is_active', false);
     }
 }

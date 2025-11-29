@@ -28,7 +28,7 @@ final class SaleFactory extends Factory
 
         return [
             'customer_id' => Customer::factory(),
-            'payment_method_id' => PaymentMethod::factory(),
+            'payment_method_id' => PaymentMethod::inRandomOrder()->first()?->id ?? PaymentMethod::factory(),
             'total' => $total,
             'paid_amount' => $total - $discount,
             'discount' => $discount,

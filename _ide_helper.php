@@ -27227,6 +27227,42 @@ namespace Illuminate\Testing {
             }
     }
 
+namespace App\Livewire\Items {
+    /**
+     */
+    class ListItems extends \Livewire\Component {
+            }
+    /**
+     */
+    class ListInventories extends \Livewire\Component {
+            }
+    }
+
+namespace App\Livewire\Customer {
+    /**
+     */
+    class ListCustomers extends \Livewire\Component {
+            }
+    }
+
+namespace App\Livewire\Sales {
+    /**
+     */
+    class ListSales extends \Livewire\Component {
+            }
+    }
+
+namespace App\Livewire\Management {
+    /**
+     */
+    class ListUsers extends \Livewire\Component {
+            }
+    /**
+     */
+    class ListPaymentMethods extends \Livewire\Component {
+            }
+    }
+
 namespace App\Livewire\Settings {
     /**
      */

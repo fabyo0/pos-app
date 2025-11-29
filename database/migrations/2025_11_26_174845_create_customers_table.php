@@ -14,9 +14,22 @@ return new class () extends Migration {
     {
         Schema::create('customers', function (Blueprint $table): void {
             $table->id();
+
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->string('phone')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('tax_id')->nullable();
+
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('country')->nullable();
+
+            $table->boolean('is_active')->default(true);
+            $table->text('notes')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
         });

@@ -32,6 +32,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|SalesItem whereQuantity($value)
  * @method static Builder<static>|SalesItem whereSaleId($value)
  * @method static Builder<static>|SalesItem whereUpdatedAt($value)
+ * @property string|null $deleted_at
+ * @method static Builder<static>|SalesItem whereDeletedAt($value)
  * @mixin \Eloquent
  */
 final class SalesItem extends Model

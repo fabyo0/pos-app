@@ -49,6 +49,11 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @property RoleType $role
  * @method static Builder<static>|User whereRole($value)
+ * @property Carbon|null $deleted_at
+ * @method static Builder<static>|User onlyTrashed()
+ * @method static Builder<static>|User whereDeletedAt($value)
+ * @method static Builder<static>|User withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|User withoutTrashed()
  * @mixin \Eloquent
  */
 final class User extends Authenticatable
@@ -57,8 +62,8 @@ final class User extends Authenticatable
     use HasFactory;
 
     use Notifiable;
-    use TwoFactorAuthenticatable;
     use SoftDeletes;
+    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -98,12 +103,12 @@ final class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return self::$role === RoleType::ADMIN->value;
+        return $this->role === RoleType::ADMIN;
     }
 
     public function isCashier(): bool
     {
-        return self::$role === RoleType::CASHIER->value;
+        return $this->role === RoleType::CASHIER;
     }
 
     /**

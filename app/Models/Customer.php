@@ -32,22 +32,76 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Customer whereName($value)
  * @method static Builder<static>|Customer wherePhone($value)
  * @method static Builder<static>|Customer whereUpdatedAt($value)
+ * @property Carbon|null $deleted_at
+ * @method static Builder<static>|Customer onlyTrashed()
+ * @method static Builder<static>|Customer whereDeletedAt($value)
+ * @method static Builder<static>|Customer withTrashed(bool $withTrashed = true)
+ * @method static Builder<static>|Customer withoutTrashed()
+ * @property string|null $company_name
+ * @property string|null $tax_id
+ * @property string|null $address
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $postal_code
+ * @property string|null $country
+ * @property bool $is_active
+ * @property string|null $notes
+ * @property-read string|null $full_address
+ * @method static Builder<static>|Customer whereAddress($value)
+ * @method static Builder<static>|Customer whereCity($value)
+ * @method static Builder<static>|Customer whereCompanyName($value)
+ * @method static Builder<static>|Customer whereCountry($value)
+ * @method static Builder<static>|Customer whereIsActive($value)
+ * @method static Builder<static>|Customer whereNotes($value)
+ * @method static Builder<static>|Customer wherePostalCode($value)
+ * @method static Builder<static>|Customer whereState($value)
+ * @method static Builder<static>|Customer whereTaxId($value)
  * @mixin \Eloquent
  */
 final class Customer extends Model
 {
     /** @use HasFactory<CustomerFactory> */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [
         'name',
         'email',
         'phone',
+        'company_name',
+        'tax_id',
+        'address',
+        'city',
+        'state',
+        'postal_code',
+        'country',
+        'is_active',
+        'notes',
     ];
 
     public function sales(): HasMany
     {
         return $this->hasMany(related: Sale::class, foreignKey: 'customer_id');
+    }
+
+    public function getFullAddressAttribute(): ?string
+    {
+        $parts = array_filter([
+            $this->address,
+            $this->city,
+            $this->state,
+            $this->postal_code,
+            $this->country,
+        ]);
+
+        return $parts === [] ? null : implode(', ', $parts);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
     }
 }
