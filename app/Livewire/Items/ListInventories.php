@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Items;
 
+use App\Enums\ItemStatus;
 use App\Models\Inventory;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -16,12 +17,11 @@ use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
-use App\Enums\ItemStatus;
-use Filament\Tables\Filters\SelectFilter;
 
 final class ListInventories extends Component implements HasActions, HasSchemas, HasTable
 {
@@ -39,7 +39,7 @@ final class ListInventories extends Component implements HasActions, HasSchemas,
                     ->weight('bold')
                     ->icon('heroicon-o-cube')
                     ->description(fn($record): string => "SKU: {$record->item->sku}")
-                    ->formatStateUsing(fn($state): string => ucfirst($state))
+                    ->formatStateUsing(fn($state): string => ucfirst((string) $state))
                     ->searchable(),
 
                 TextColumn::make('item.price')
@@ -97,9 +97,10 @@ final class ListInventories extends Component implements HasActions, HasSchemas,
                         'active' => 'Active',
                         'inactive' => 'Inactive',
                     ])
-                    ->query(fn(Builder $query, array $data): Builder => $data['value']
+                    ->query(
+                        fn(Builder $query, array $data): Builder => $data['value']
                         ? $query->whereHas('item', fn($q) => $q->where('status', $data['value']))
-                        : $query
+                        : $query,
                     ),
             ])
             ->headerActions([
@@ -108,7 +109,7 @@ final class ListInventories extends Component implements HasActions, HasSchemas,
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make()
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

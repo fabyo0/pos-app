@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -14,14 +15,10 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Cache\RateLimiting\Limit;
 
 final class AppServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-        //
-    }
+    public function register(): void {}
 
     public function boot(): void
     {
@@ -43,8 +40,8 @@ final class AppServiceProvider extends ServiceProvider
 
     private function configureModels(): void
     {
-        Model::shouldBeStrict(!$this->app->isProduction());
-        Model::preventLazyLoading(!$this->app->isProduction());
+        Model::shouldBeStrict( ! $this->app->isProduction());
+        Model::preventLazyLoading( ! $this->app->isProduction());
         Model::unguard();
     }
 
@@ -60,13 +57,14 @@ final class AppServiceProvider extends ServiceProvider
 
     private function configurePasswordValidation(): void
     {
-        Password::defaults(fn() => $this->app->isProduction()
+        Password::defaults(
+            fn() => $this->app->isProduction()
             ? Password::min(8)
                 ->uncompromised()
                 ->letters()
                 ->mixedCase()
                 ->numbers()
-            : null
+            : null,
         );
     }
 
@@ -75,7 +73,6 @@ final class AppServiceProvider extends ServiceProvider
         Date::use(CarbonImmutable::class);
         CarbonImmutable::setLocale(config('app.locale'));
     }
-
 
     private function configureRateLimiting(): void
     {
