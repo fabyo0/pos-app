@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum ItemStatus: string
+use Filament\Support\Contracts\HasLabel;
+
+enum ItemStatus: string implements HasLabel
 {
     case ACTIVE = 'active';
     case INACTIVE = 'inactive';
@@ -14,7 +16,7 @@ enum ItemStatus: string
         return array_column(self::cases(), 'value');
     }
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::ACTIVE => 'Active',

@@ -26,7 +26,7 @@ final class ItemFactory extends Factory
             'name' => $this->faker->words(2, true),
             'sku' => $this->faker->unique()->numerify('SKU-#####'),
             'price' => fake()->randomFloat(2, 10, 1000),
-            'status' => ItemStatus::ACTIVE->value,
+            'status' => $this->faker->randomElement([ItemStatus::ACTIVE->value, ItemStatus::INACTIVE->value]),
         ];
     }
 

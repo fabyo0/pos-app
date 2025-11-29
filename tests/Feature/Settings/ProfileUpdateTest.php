@@ -24,9 +24,9 @@ test('profile information can be updated', function (): void {
 
     $user->refresh();
 
-    expect($user->name)->toEqual('Test User');
-    expect($user->email)->toEqual('test@example.com');
-    expect($user->email_verified_at)->toBeNull();
+    expect($user->name)->toEqual('Test User')
+        ->and($user->email)->toEqual('test@example.com')
+        ->and($user->email_verified_at)->toBeNull();
 });
 
 test('email verification status is unchanged when email address is unchanged', function (): void {
@@ -57,8 +57,8 @@ test('user can delete their account', function (): void {
         ->assertHasNoErrors()
         ->assertRedirect('/');
 
-    expect($user->fresh()?->trashed())->toBeTrue();
-    expect(auth()->check())->toBeFalse();
+    expect($user->fresh()?->trashed())->toBeTrue()
+        ->and(auth()->check())->toBeFalse();
 });
 
 test('correct password must be provided to delete account', function (): void {

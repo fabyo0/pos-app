@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum RoleType: string
+use Filament\Support\Contracts\HasLabel;
+
+enum RoleType: string implements HasLabel
 {
     case ADMIN = 'admin';
     case CASHIER = 'cashier';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::ADMIN => 'Admin',
