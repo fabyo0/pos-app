@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Customer\ListCustomers;
-use App\Livewire\Items\ListInventories;
-use App\Livewire\Items\ListItems;
+use App\Livewire;
+use App\Livewire\Items\Create;
+use App\Livewire\Items\Edit;
+use App\Livewire\Items\Index;
 use App\Livewire\Management\ListPaymentMethods;
 use App\Livewire\Management\ListUsers;
-use App\Livewire\Sales\ListSales;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -27,15 +27,19 @@ Route::middleware(['auth'])->group(function (): void {
 
     // Items
     Route::prefix('items')->name('items.')->group(function (): void {
-        Route::get('/', ListItems::class)->name('index');
-        Route::get('/inventories', ListInventories::class)->name('inventories');
+        Route::get('/', Index::class)->name('index');
+        Route::get('/edit/{record}', Edit::class)->name('edit');
+        Route::get('/create', Create::class)->name('create');
     });
 
+    //Inventory
+    Route::get('/inventories', Livewire\Inventory\Index::class)->name('inventories');
+
     // Customers
-    Route::get('/customers', ListCustomers::class)->name('customers.index');
+    Route::get('/customers', Livewire\Customer\Index::class)->name('customers.index');
 
     // Sales
-    Route::get('/sales', ListSales::class)->name('sales.index');
+    Route::get('/sales', Livewire\Sales\Index::class)->name('sales.index');
 
     // Management
     Route::prefix('management')->name('management.')->group(function (): void {

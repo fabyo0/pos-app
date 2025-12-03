@@ -50,9 +50,6 @@ final class RolesAndPermissionsSeeder extends Seeder
             'payment-methods.create',
             'payment-methods.edit',
             'payment-methods.delete',
-
-            // Reports
-            'reports.view',
         ];
 
         foreach ($permissions as $permission) {

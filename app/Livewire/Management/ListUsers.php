@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Management;
 
-use App\Enums\RoleType;
 use App\Models\User;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -20,7 +19,7 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 
 final class ListUsers extends Component implements HasActions, HasSchemas, HasTable
@@ -32,33 +31,31 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
     public function table(Table $table): Table
     {
         return $table
-            ->query(User::query())
+            ->query(
+                User::query()
+                    ->with('roles:name'),
+            )
             ->columns([
                 TextColumn::make('name')
                     ->label('Name')
-                    ->searchable()
                     ->sortable()
                     ->weight('bold'),
                 TextColumn::make('email')
                     ->label('Email Address')
                     ->searchable()
-                  /*  ->copyable()
-                    ->copyMessage('Copied!')
-                    ->copyMessageDuration(1500)
-                    ->tooltip('Click to copy')*/
                     ->icon('heroicon-o-envelope'),
-                TextColumn::make('role')
+                TextColumn::make('roles.name')
                     ->badge()
-                    ->formatStateUsing(fn(RoleType $state) => Str::ucwords($state->value))
-                    ->color(fn(RoleType $state): string => match ($state) {
-                        RoleType::ADMIN => 'success',
-                        RoleType::CASHIER => 'info',
+                    ->formatStateUsing(fn($state): string => ucfirst((string) $state))
+                    ->color(fn($state): string => match ($state) {
+                        'admin' => 'success',
+                        'cashier' => 'info',
                     })
-                    ->icon(fn(RoleType $state): string => match ($state) {
-                        RoleType::ADMIN => 'heroicon-o-shield-check',
-                        RoleType::CASHIER => 'heroicon-o-user',
-                    })
-                    ->sortable(),
+                    ->icon(fn($state): string => match ($state) {
+                        'admin' => 'heroicon-o-shield-check',
+                        'cashier' => 'heroicon-o-user',
+                        default => 'Unexpected match value',
+                    }),
                 IconColumn::make('email_verified_at')
                     ->label('Verified')
                     ->boolean()
@@ -81,9 +78,18 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('role')
-                    ->options(RoleType::class)
-                    ->label('Filter by Role'),
+                SelectFilter::make('roles')
+                    ->label('Filter by Role')
+                    ->options([
+                        'admin' => 'Admin',
+                        'cashier' => 'Cashier',
+                    ])
+                    ->query(
+                        fn(Builder $query, array $data): Builder
+                        => $data['value']
+                        ? $query->role($data['value'])
+                         : $query,
+                    ),
             ])
             ->recordActions([
                 ViewAction::make(),

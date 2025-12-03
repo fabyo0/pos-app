@@ -24,9 +24,8 @@ final class UserSeeder extends Seeder
 
         $admin->assignRole(RoleType::ADMIN->value);
 
-        $cashier = User::factory()->withoutTwoFactor()->create()->each(fn(User $user) => $user->assignRole(RoleType::CASHIER->value));
-
-        $cashier->assignRole(RoleType::CASHIER->value);
-
+        User::factory(10)->withoutTwoFactor()->create()->each(function (User $user): void {
+            $user->assignRole(RoleType::CASHIER->value);
+        });
     }
 }

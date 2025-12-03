@@ -55,8 +55,8 @@
                                :current="request()->routeIs('items.index')">
                 {{ __('Items') }}
             </flux:navlist.item>
-            <flux:navlist.item wire:navigate icon="queue-list" :href="route('items.inventories')"
-                               :current="request()->routeIs('items.inventories')">
+            <flux:navlist.item wire:navigate icon="queue-list" :href="route('inventories')"
+                               :current="request()->routeIs('inventories')">
                 {{ __('Inventory') }}
             </flux:navlist.item>
         </flux:navlist.group>

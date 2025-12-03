@@ -27290,25 +27290,36 @@ namespace Illuminate\Testing {
 namespace App\Livewire\Items {
     /**
      */
-    class ListItems extends \Livewire\Component {
+    class Index extends \Livewire\Component {
             }
     /**
      */
-    class ListInventories extends \Livewire\Component {
+    class Edit extends \Livewire\Component {
+            }
+    /**
+     */
+    class Create extends \Livewire\Component {
+            }
+    }
+
+namespace App\Livewire\Inventory {
+    /**
+     */
+    class Index extends \Livewire\Component {
             }
     }
 
 namespace App\Livewire\Customer {
     /**
      */
-    class ListCustomers extends \Livewire\Component {
+    class Index extends \Livewire\Component {
             }
     }
 
 namespace App\Livewire\Sales {
     /**
      */
-    class ListSales extends \Livewire\Component {
+    class Index extends \Livewire\Component {
             }
     }
 

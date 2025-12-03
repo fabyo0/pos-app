@@ -21,7 +21,7 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-final class ListCustomers extends Component implements HasActions, HasSchemas, HasTable
+final class Index extends Component implements HasActions, HasSchemas, HasTable
 {
     use InteractsWithActions;
     use InteractsWithSchemas;
