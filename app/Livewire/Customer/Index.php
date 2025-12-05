@@ -64,7 +64,8 @@ final class Index extends Component implements HasActions, HasSchemas, HasTable
                     ->alignCenter(),
             ])
             ->recordActions([
-                ViewAction::make(),
+                ViewAction::make()
+                    ->url(fn(Customer $record): string => route('customers.show', $record)),
                 EditAction::make()
                     ->url(fn(Customer $record): string => route('customers.edit', $record)),
                 DeleteAction::make(),
