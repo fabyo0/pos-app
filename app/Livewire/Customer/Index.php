@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Customer;
 
 use App\Models\Customer;
+use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\DeleteAction;
@@ -12,6 +13,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -63,8 +65,15 @@ final class Index extends Component implements HasActions, HasSchemas, HasTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
+                EditAction::make()
+                    ->url(fn(Customer $record): string => route('customers.edit', $record)),
                 DeleteAction::make(),
+            ])
+            ->headerActions([
+                Action::make('Create')
+                    ->label('Create Item')
+                    ->icon(Heroicon::Plus)
+                    ->url(fn(): string => route('customers.create')),
             ])
             ->filters([
                 SelectFilter::make('is_active')

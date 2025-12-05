@@ -34,7 +34,7 @@
 
             <x-filament::button
                 type="submit"
-                icon="heroicon-o-plus"
+                icon="heroicon-m-sparkles"
             >
                 Create Item
             </x-filament::button>

@@ -36,7 +36,11 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('/inventories', Livewire\Inventory\Index::class)->name('inventories');
 
     // Customers
-    Route::get('/customers', Livewire\Customer\Index::class)->name('customers.index');
+    Route::prefix('customers')->name('customers.')->group(function (): void {
+        Route::get('/', Livewire\Customer\Index::class)->name('index');
+        Route::get('/create', Livewire\Customer\Create::class)->name('create');
+        Route::get('/edit/{record}', Livewire\Customer\Edit::class)->name('edit');
+    });
 
     // Sales
     Route::get('/sales', Livewire\Sales\Index::class)->name('sales.index');

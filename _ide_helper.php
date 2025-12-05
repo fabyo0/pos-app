@@ -27314,6 +27314,14 @@ namespace App\Livewire\Customer {
      */
     class Index extends \Livewire\Component {
             }
+    /**
+     */
+    class Create extends \Livewire\Component {
+            }
+    /**
+     */
+    class Edit extends \Livewire\Component {
+            }
     }
 
 namespace App\Livewire\Sales {

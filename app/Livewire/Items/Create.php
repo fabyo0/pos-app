@@ -49,6 +49,7 @@ final class Create extends Component implements HasActions, HasSchemas
                                     ->required()
                                     ->maxLength(255)
                                     ->autofocus()
+                                    ->unique()
                                     ->columnSpan(1),
 
                                 TextInput::make('sku')
