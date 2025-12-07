@@ -3,15 +3,18 @@
 declare(strict_types=1);
 
 use App\Livewire;
+use App\Livewire\Customer\Show;
 use App\Livewire\Items\Create;
 use App\Livewire\Items\Edit;
 use App\Livewire\Items\Index;
+use App\Livewire\Management\CreateUser;
 use App\Livewire\Management\ListPaymentMethods;
 use App\Livewire\Management\ListUsers;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
+use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +25,8 @@ Route::get('/', fn(): Factory|View => view('welcome'))->name('home');
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth'])
     ->name('dashboard');
+
+Route::get('/test', fn() => User::with('roles')->get());
 
 Route::middleware(['auth'])->group(function (): void {
 
@@ -40,7 +45,7 @@ Route::middleware(['auth'])->group(function (): void {
         Route::get('/', Livewire\Customer\Index::class)->name('index');
         Route::get('/create', Livewire\Customer\Create::class)->name('create');
         Route::get('/edit/{record}', Livewire\Customer\Edit::class)->name('edit');
-        Route::get('/{record}', Livewire\Customer\Show::class)->name('show');
+        Route::get('/{record}', Show::class)->name('show');
     });
 
     // Sales
@@ -49,6 +54,7 @@ Route::middleware(['auth'])->group(function (): void {
     // Management
     Route::prefix('management')->name('management.')->group(function (): void {
         Route::get('/users', ListUsers::class)->name('users');
+        Route::get('/user/create', CreateUser::class)->name('user.create');
         Route::get('/payment-methods', ListPaymentMethods::class)->name('payment-methods');
     });
 

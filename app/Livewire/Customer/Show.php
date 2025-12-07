@@ -77,7 +77,7 @@ final class Show extends Component implements HasSchemas
                 Section::make('Notes')
                     ->icon('heroicon-o-document-text')
                     ->collapsible()
-                    ->collapsed(fn() => empty($this->record->notes))
+                    ->collapsed(fn(): bool => empty($this->record->notes))
                     ->schema([
                         Textarea::make('notes')
                             ->hiddenLabel()

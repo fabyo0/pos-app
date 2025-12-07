@@ -110,7 +110,7 @@ final class Edit extends Component implements HasActions, HasSchemas
                     ->description('Internal notes about this customer.')
                     ->icon('heroicon-o-document-text')
                     ->collapsible()
-                    ->collapsed(fn() => empty($this->record->notes))
+                    ->collapsed(fn(): bool => empty($this->record->notes))
                     ->schema([
                         Textarea::make('notes')
                             ->hiddenLabel()

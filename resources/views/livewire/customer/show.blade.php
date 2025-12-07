@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <flux:button href="{{ route('customers.edit', $record) }}" variant="primary" icon="pencil-square">
+            <flux:button wire:navigate href="{{ route('customers.edit', $record) }}" variant="primary" icon="pencil-square">
                 Edit Customer
             </flux:button>
         </div>

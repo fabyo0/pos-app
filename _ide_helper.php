@@ -27322,6 +27322,10 @@ namespace App\Livewire\Customer {
      */
     class Edit extends \Livewire\Component {
             }
+    /**
+     */
+    class Show extends \Livewire\Component {
+            }
     }
 
 namespace App\Livewire\Sales {
@@ -27335,6 +27339,10 @@ namespace App\Livewire\Management {
     /**
      */
     class ListUsers extends \Livewire\Component {
+            }
+    /**
+     */
+    class CreateUser extends \Livewire\Component {
             }
     /**
      */
