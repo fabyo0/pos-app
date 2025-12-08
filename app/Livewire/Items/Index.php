@@ -38,7 +38,7 @@ final class Index extends Component implements HasActions, HasSchemas, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn(): Builder => Item::query())
+            ->query(fn (): Builder => Item::query())
             ->columns([
                 TextColumn::make('name')
                     ->weight('bold')
@@ -56,7 +56,7 @@ final class Index extends Component implements HasActions, HasSchemas, HasTable
                     ->badge()
                     ->default(0)
                     ->sortable()
-                    ->color(fn($state): string => match (true) {
+                    ->color(fn ($state): string => match (true) {
                         $state <= 0 => 'danger',
                         $state <= 10 => 'warning',
                         default => 'success',
@@ -80,7 +80,7 @@ final class Index extends Component implements HasActions, HasSchemas, HasTable
                         $record->status = $state ? ItemStatus::ACTIVE : ItemStatus::INACTIVE;
                         $record->save();
                     })
-                    ->getStateUsing(fn($record): bool => $record->status === ItemStatus::ACTIVE),
+                    ->getStateUsing(fn ($record): bool => $record->status === ItemStatus::ACTIVE),
 
                 TextColumn::make('created_at')
                     ->label('Added')
@@ -95,17 +95,17 @@ final class Index extends Component implements HasActions, HasSchemas, HasTable
 
                 Filter::make('low_stock')
                     ->label('Low Stock')
-                    ->query(fn(Builder $query): Builder => $query->whereHas('inventory', fn($q) => $q->where('quantity', '<=', 10))),
+                    ->query(fn (Builder $query): Builder => $query->whereHas('inventory', fn ($q) => $q->where('quantity', '<=', 10))),
             ])
             ->headerActions([
                 Action::make('Create')
                     ->label('Create Item')
-                    ->url(fn(): string => route('items.create')),
+                    ->url(fn (): string => route('items.create')),
             ])
             ->recordActions([
                 ViewAction::make()
                     ->color('info')
-                    ->modalHeading(fn($record) => $record->name)
+                    ->modalHeading(fn ($record) => $record->name)
                     ->modalIcon('heroicon-o-cube')
                     ->modalWidth('lg')
                     ->infolist([
@@ -138,7 +138,7 @@ final class Index extends Component implements HasActions, HasSchemas, HasTable
                                     ->size('lg')
                                     ->weight('bold')
                                     ->badge()
-                                    ->color(fn($state): string => match (true) {
+                                    ->color(fn ($state): string => match (true) {
                                         $state <= 0 => 'danger',
                                         $state <= 10 => 'warning',
                                         default => 'success',
@@ -147,7 +147,7 @@ final class Index extends Component implements HasActions, HasSchemas, HasTable
 
                                 TextEntry::make('sales_items_count')
                                     ->label('Total Sold')
-                                    ->state(fn($record) => $record->salesItems()->count())
+                                    ->state(fn ($record) => $record->salesItems()->count())
                                     ->size('lg')
                                     ->weight('bold')
                                     ->badge()
@@ -156,7 +156,7 @@ final class Index extends Component implements HasActions, HasSchemas, HasTable
 
                                 TextEntry::make('stock_value')
                                     ->label('Stock Value')
-                                    ->state(fn($record): int|float => ($record->inventory?->quantity ?? 0) * $record->price)
+                                    ->state(fn ($record): int|float => ($record->inventory?->quantity ?? 0) * $record->price)
                                     ->money()
                                     ->size('lg')
                                     ->weight('bold')
@@ -185,7 +185,7 @@ final class Index extends Component implements HasActions, HasSchemas, HasTable
                     ]),
 
                 EditAction::make()
-                    ->url(fn(Item $record): string => route('items.edit', $record)),
+                    ->url(fn (Item $record): string => route('items.edit', $record)),
 
                 DeleteAction::make(),
             ])
