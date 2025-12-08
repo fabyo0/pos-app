@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Management;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Select;
@@ -102,6 +103,8 @@ final class CreateUser extends Component implements HasActions, HasSchemas
     public function create(): void
     {
         $data = $this->form->getState();
+
+        $data['email_verified_at'] = Carbon::now();
 
         $record = User::create($data);
 

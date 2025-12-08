@@ -30,13 +30,18 @@ final class CustomerFactory extends Factory
             'state' => fake()->optional()->state(),
             'postal_code' => fake()->optional()->postcode(),
             'country' => fake()->optional()->country(),
-            'is_active' => true,
+            'is_active' => $this->faker->boolean(),
             'notes' => fake()->optional(0.2)->sentence(),
         ];
     }
 
-    public function inactive(): static
+    public function inactive(): self
     {
         return $this->state(['is_active' => false]);
+    }
+
+    public function active(): self
+    {
+        return $this->state(['is_active' => true]);
     }
 }

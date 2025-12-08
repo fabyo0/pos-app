@@ -14,7 +14,6 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
-use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
@@ -25,8 +24,6 @@ Route::get('/', fn(): Factory|View => view('welcome'))->name('home');
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth'])
     ->name('dashboard');
-
-Route::get('/test', fn() => User::with('roles')->get());
 
 Route::middleware(['auth'])->group(function (): void {
 
