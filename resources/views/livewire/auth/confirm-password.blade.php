@@ -20,9 +20,21 @@
                 viewable
             />
 
-            <flux:button variant="primary" type="submit" class="w-full" data-test="confirm-password-button">
-                {{ __('Confirm') }}
-            </flux:button>
+            <div class="flex flex-col gap-3">
+                <flux:button variant="primary" type="submit" class="w-full" data-test="confirm-password-button">
+                    {{ __('Confirm') }}
+                </flux:button>
+
+                <flux:button
+                    variant="ghost"
+                    wire:navigate
+                    href="{{ route('profile.edit') }}"
+                    class="w-full"
+                    icon="arrow-left"
+                >
+                    {{ __('Back') }}
+                </flux:button>
+            </div>
         </form>
     </div>
 </x-layouts.auth>

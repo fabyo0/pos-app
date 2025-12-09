@@ -19,7 +19,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
-Route::get('/', fn(): Factory|View => view('welcome'))->name('home');
+Route::get('/', fn (): Factory|View => view('welcome'))->name('home');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth'])
@@ -34,7 +34,7 @@ Route::middleware(['auth'])->group(function (): void {
         Route::get('/create', Create::class)->name('create');
     });
 
-    //Inventory
+    // Inventory
     Route::get('/inventories', Livewire\Inventory\Index::class)->name('inventories');
 
     // Customers
@@ -47,6 +47,11 @@ Route::middleware(['auth'])->group(function (): void {
 
     // Sales
     Route::get('/sales', Livewire\Sales\Index::class)->name('sales.index');
+
+    // Pos
+    Route::prefix('pos')->name('pos.')->group(function (): void {
+        Route::get('/', Livewire\POS\Index::class)->name('index');
+    });
 
     // Management
     Route::prefix('management')->name('management.')->group(function (): void {

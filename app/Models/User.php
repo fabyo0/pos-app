@@ -36,6 +36,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $updated_at
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ *
  * @method static UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
@@ -51,21 +52,28 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder<static>|User whereTwoFactorRecoveryCodes($value)
  * @method static Builder<static>|User whereTwoFactorSecret($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
+ *
  * @property RoleType $role
+ *
  * @method static Builder<static>|User whereRole($value)
+ *
  * @property Carbon|null $deleted_at
+ *
  * @method static Builder<static>|User onlyTrashed()
  * @method static Builder<static>|User whereDeletedAt($value)
  * @method static Builder<static>|User withTrashed(bool $withTrashed = true)
  * @method static Builder<static>|User withoutTrashed()
+ *
  * @property-read Collection<int, Permission> $permissions
  * @property-read int|null $permissions_count
  * @property-read Collection<int, Role> $roles
  * @property-read int|null $roles_count
+ *
  * @method static Builder<static>|User permission($permissions, $without = false)
  * @method static Builder<static>|User role($roles, $guard = null, $without = false)
  * @method static Builder<static>|User withoutPermission($permissions)
  * @method static Builder<static>|User withoutRole($roles, $guard = null)
+ *
  * @mixin \Eloquent
  */
 final class User extends Authenticatable
