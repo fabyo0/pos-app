@@ -19,7 +19,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
-Route::get('/', fn (): Factory|View => view('welcome'))->name('home');
+Route::get('/', fn(): Factory|View => view('welcome'))->name('home');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth'])
