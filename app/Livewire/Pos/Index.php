@@ -8,6 +8,8 @@ use App\Models\Customer;
 use App\Models\Inventory;
 use App\Models\Item;
 use App\Models\PaymentMethod;
+use App\Models\Sale;
+use Exception;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Notifications\Notification;
@@ -16,6 +18,7 @@ use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -46,7 +49,7 @@ final class Index extends Component implements HasActions, HasSchemas
 
     public int $paidAmount = 0;
 
-    public int|float $discountAmount = 0;
+    public float $discountAmount = 0;
 
     public function mount(): void
     {
@@ -198,6 +201,8 @@ final class Index extends Component implements HasActions, HasSchemas
     public function clearCart(): void
     {
         $this->cart = [];
+        $this->discountAmount = 0;
+        $this->paidAmount = 0;
     }
 
     public function submit(): void
@@ -217,8 +222,8 @@ final class Index extends Component implements HasActions, HasSchemas
 
         return $this->customers->filter(
             fn ($customer): bool => str_contains(mb_strtolower($customer->name), $search) ||
-            str_contains(mb_strtolower($customer->phone ?? ''), $search) ||
-            str_contains(mb_strtolower($customer->email ?? ''), $search),
+                str_contains(mb_strtolower($customer->phone ?? ''), $search) ||
+                str_contains(mb_strtolower($customer->email ?? ''), $search),
         );
     }
 
@@ -238,7 +243,82 @@ final class Index extends Component implements HasActions, HasSchemas
 
     public function checkout(): void
     {
-        dd($this->all());
+        if (empty($this->cart)) {
+            Notification::make()
+                ->title('Failed Sale!')
+                ->body('Please add items to cart before checkout.')
+                ->danger()
+                ->send();
+
+            return;
+        }
+
+        if ( ! $this->paymentMethodId) {
+            Notification::make()
+                ->title('Failed Sale!')
+                ->body('Please select a payment method.')
+                ->danger()
+                ->send();
+
+            return;
+        }
+
+        if ($this->paidAmount < $this->total) {
+            Notification::make()
+                ->title('Failed Sale!')
+                ->body('Insufficient payment amount.')
+                ->danger()
+                ->send();
+
+            return;
+        }
+
+        try {
+            DB::transaction(function (): void {
+                $sale = Sale::create([
+                    'customer_id' => $this->customerId,
+                    'payment_method_id' => $this->paymentMethodId,
+                    'total' => $this->total,
+                    'paid_amount' => $this->paidAmount,
+                    'discount' => $this->discountAmount,
+                ]);
+
+                foreach ($this->cart as $item) {
+                    $sale->salesItems()->create([
+                        'item_id' => $item['id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price'],
+                    ]);
+
+                    Inventory::where('item_id', $item['id'])
+                        ->decrement('quantity', $item['quantity']);
+                }
+            });
+
+            Notification::make()
+                ->title('Sale Completed!')
+                ->body('Change: $' . number_format($this->change, 2))
+                ->success()
+                ->send();
+
+
+            $this->cart = [];
+            $this->search = '';
+            $this->customerSearch = '';
+            $this->customerId = null;
+            $this->paymentMethodId = null;
+            $this->paidAmount = 0;
+            $this->discountAmount = 0;
+
+        } catch (Exception $e) {
+            report($e);
+
+            Notification::make()
+                ->title('Sale Failed!')
+                ->body('An error occurred. Please try again.')
+                ->danger()
+                ->send();
+        }
     }
 
     public function render(): View

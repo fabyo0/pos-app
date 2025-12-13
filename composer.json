@@ -7,7 +7,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "filament/actions": "^4.2",
         "filament/forms": "^4.0",
         "filament/infolists": "^4.0",

@@ -413,59 +413,60 @@
                 </div>
 
 
-
                 {{-- Discount Section --}}
-                <div x-data="{ showDiscount: @js($discountAmount > 0) }">
-                    <template x-if="!showDiscount">
-                        <button
-                            @click="showDiscount = true"
-                            type="button"
-                            class="w-full flex items-center justify-center gap-2 p-2.5
-                   border-2 border-dashed border-zinc-300 dark:border-zinc-600 rounded-lg
-                   text-zinc-500 dark:text-zinc-400 hover:border-red-400 hover:text-red-500
-                   dark:hover:border-red-500 dark:hover:text-red-400 transition-colors"
-                        >
-                            <flux:icon name="tag" class="size-4" />
-                            <span class="text-sm font-medium">Add Discount</span>
-                        </button>
-                    </template>
-
-                    <template x-if="showDiscount">
-                        <div class="flex items-center gap-2 p-3 bg-gradient-to-r from-red-50 to-orange-50
-                    dark:from-red-900/20 dark:to-orange-900/20 rounded-lg
-                    border border-red-200 dark:border-red-800/50">
-                            <div class="size-8 bg-red-500 rounded-lg flex items-center justify-center shrink-0">
-                                <flux:icon name="tag" class="size-4 text-white" />
-                            </div>
-                            <div class="flex-1">
-                                <label class="text-[10px] uppercase tracking-wider text-red-500 font-semibold">
-                                    Discount Applied
-                                </label>
-                                <div class="flex items-center">
-                                    <span class="text-red-500 text-xl font-bold mr-1">-$</span>
-                                    <input
-                                        wire:model.live.debounce.300ms="discountAmount"
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        class="w-full text-xl font-bold bg-transparent border-0 p-0
-                               text-red-600 dark:text-red-400 focus:ring-0"
-                                        placeholder="0.00"
-                                    >
-                                </div>
-                            </div>
+                @if(count($this->cart) > 0)
+                    @php $hasDiscount = $this->discountAmount > 0; @endphp
+                    <div x-data="{ showDiscount: {{ $hasDiscount ? 'true' : 'false' }} }">
+                        <template x-if="!showDiscount">
                             <button
-                                wire:click="clearDiscount"
-                                @click="showDiscount = false"
+                                @click="showDiscount = true"
                                 type="button"
-                                class="size-8 bg-red-100 dark:bg-red-900/50 rounded-lg flex items-center justify-center
-                       hover:bg-red-200 dark:hover:bg-red-800/50 transition-colors"
+                                class="w-full flex items-center justify-center gap-2 p-2.5
+                       border-2 border-dashed border-zinc-300 dark:border-zinc-600 rounded-lg
+                       text-zinc-500 dark:text-zinc-400 hover:border-red-400 hover:text-red-500
+                       dark:hover:border-red-500 dark:hover:text-red-400 transition-colors"
                             >
-                                <flux:icon name="trash" class="size-4 text-red-600 dark:text-red-400" />
+                                <flux:icon name="tag" class="size-4" />
+                                <span class="text-sm font-medium">Add Discount</span>
                             </button>
-                        </div>
-                    </template>
-                </div>
+                        </template>
+
+                        <template x-if="showDiscount">
+                            <div class="flex items-center gap-2 p-3 bg-gradient-to-r from-red-50 to-orange-50
+                        dark:from-red-900/20 dark:to-orange-900/20 rounded-lg
+                        border border-red-200 dark:border-red-800/50">
+                                <div class="size-8 bg-red-500 rounded-lg flex items-center justify-center shrink-0">
+                                    <flux:icon name="tag" class="size-4 text-white" />
+                                </div>
+                                <div class="flex-1">
+                                    <label class="text-[10px] uppercase tracking-wider text-red-500 font-semibold">
+                                        Discount Applied
+                                    </label>
+                                    <div class="flex items-center">
+                                        <span class="text-red-500 text-xl font-bold mr-1">-$</span>
+                                        <input
+                                            wire:model.live.debounce.300ms="discountAmount"
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            class="w-full text-xl font-bold bg-transparent border-0 p-0
+                                   text-red-600 dark:text-red-400 focus:ring-0"
+                                        >
+                                    </div>
+                                </div>
+                                <button
+                                    wire:click="clearDiscount"
+                                    @click="showDiscount = false"
+                                    type="button"
+                                    class="size-8 bg-red-100 dark:bg-red-900/50 rounded-lg flex items-center justify-center
+                           hover:bg-red-200 dark:hover:bg-red-800/50 transition-colors"
+                                >
+                                    <flux:icon name="trash" class="size-4 text-red-600 dark:text-red-400" />
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                @endif
 
 
                 {{-- Total --}}
