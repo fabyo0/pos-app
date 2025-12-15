@@ -23,12 +23,56 @@
 
     <flux:spacer/>
 
+    {{-- ⚡ Quick Actions --}}
+    <flux:dropdown position="bottom" align="end">
+        <flux:tooltip :content="__('Quick Actions')" position="bottom">
+            <flux:navbar.item icon="bolt" class="cursor-pointer"/>
+        </flux:tooltip>
+
+        <flux:menu class="w-56">
+            <flux:menu.group heading="{{ __('Quick Actions') }}">
+
+                <flux:menu.item
+                    wire:navigate
+                    icon="shopping-cart"
+                    :href="route('pos.index')"
+                >
+                    {{ __('POS') }}
+                </flux:menu.item>
+
+                <flux:menu.item
+                    wire:navigate
+                    icon="chart-bar"
+                    :href="route('sales.index')"
+                >
+                    {{ __('Sales') }}
+                </flux:menu.item>
+
+                <flux:menu.item
+                    wire:navigate
+                    icon="users"
+                    :href="route('customers.index')"
+                >
+                    {{ __('Customers') }}
+                </flux:menu.item>
+
+                <flux:menu.item
+                    wire:navigate
+                    icon="cube"
+                    :href="route('items.index')"
+                >
+                    {{ __('Items') }}
+                </flux:menu.item>
+
+            </flux:menu.group>
+        </flux:menu>
+    </flux:dropdown>
+
     <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse">
         <!-- Search -->
         <flux:tooltip :content="__('Search')" position="bottom">
             <flux:navbar.item icon="magnifying-glass" href="#" :label="__('Search')"/>
         </flux:tooltip>
-
 
         <!-- Dark/Light Mode Toggle -->
         <flux:tooltip :content="__('Toggle theme')" position="bottom">
@@ -51,7 +95,9 @@
             <flux:tooltip :content="__('Notifications')" position="bottom">
                 <flux:navbar.item icon="bell" class="relative">
                     <span
-                        class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">3</span>
+                        class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
+                        3
+                    </span>
                 </flux:navbar.item>
             </flux:tooltip>
 
@@ -91,10 +137,9 @@
                 </flux:menu.item>
             </flux:menu>
         </flux:dropdown>
-
     </flux:navbar>
 
-    <!-- Header User Menu -->
+
     <flux:dropdown position="top" align="end">
         <flux:profile class="cursor-pointer" :initials="auth()->user()->initials()"/>
 
@@ -135,6 +180,7 @@
             </form>
         </flux:menu>
     </flux:dropdown>
+
 </flux:header>
 
 <!-- Sidebar -->

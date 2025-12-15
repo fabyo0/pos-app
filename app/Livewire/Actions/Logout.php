@@ -13,7 +13,7 @@ final class Logout
     /**
      * Log the current user out of the application.
      */
-    public function __invoke(): RedirectResponse
+    public function __invoke(): \Illuminate\Routing\Redirector|RedirectResponse
     {
         Auth::guard('web')->logout();
 

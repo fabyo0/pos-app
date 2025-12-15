@@ -43,9 +43,9 @@ final class Index extends Component implements HasActions, HasSchemas
 
     public ?array $data = [];
 
-    public $customerId = null;
+    public $customerId;
 
-    public $paymentMethodId = null;
+    public $paymentMethodId;
 
     public int $paidAmount = 0;
 
@@ -58,8 +58,9 @@ final class Index extends Component implements HasActions, HasSchemas
                 $query->where('quantity', '>', 0);
             })
             ->active()
+            ->latest()
             ->get()
-            ->map(fn (Item $item) => [
+            ->map(fn(Item $item): array => [
                 'id' => $item->id,
                 'name' => $item->name,
                 'sku' => $item->sku,
@@ -75,7 +76,7 @@ final class Index extends Component implements HasActions, HasSchemas
     #[Computed]
     public function filteredItems(): array
     {
-        if (empty($this->search)) {
+        if (in_array($this->search, [null, '', '0'], true)) {
             return $this->items;
         }
 
@@ -83,8 +84,8 @@ final class Index extends Component implements HasActions, HasSchemas
 
         return array_filter(
             $this->items,
-            fn (array $item): bool => str_contains(mb_strtolower($item['name']), $search)
-                || str_contains(mb_strtolower($item['sku']), $search),
+            fn(array $item): bool => str_contains(mb_strtolower((string) $item['name']), $search)
+                || str_contains(mb_strtolower((string) $item['sku']), $search),
         );
     }
 
@@ -92,7 +93,7 @@ final class Index extends Component implements HasActions, HasSchemas
     public function subtotal(): float|int
     {
         return collect($this->cart)
-            ->sum(fn ($item) => $item['price'] * $item['quantity']);
+            ->sum(fn($item): int|float => $item['price'] * $item['quantity']);
     }
 
     #[Computed]
@@ -108,7 +109,7 @@ final class Index extends Component implements HasActions, HasSchemas
     }
 
     #[Computed]
-    public function total(): int|float
+    public function total(): float
     {
         return $this->totalBeforeDiscount - $this->discountAmount;
     }
@@ -214,16 +215,16 @@ final class Index extends Component implements HasActions, HasSchemas
     #[Computed]
     public function filteredCustomers()
     {
-        if (empty($this->customerSearch)) {
+        if (in_array($this->customerSearch, [null, '', '0'], true)) {
             return $this->customers;
         }
 
         $search = mb_strtolower($this->customerSearch);
 
         return $this->customers->filter(
-            fn ($customer): bool => str_contains(mb_strtolower($customer->name), $search) ||
-                str_contains(mb_strtolower($customer->phone ?? ''), $search) ||
-                str_contains(mb_strtolower($customer->email ?? ''), $search),
+            fn($customer): bool => str_contains(mb_strtolower($customer->name), $search)
+                || str_contains(mb_strtolower($customer->phone ?? ''), $search)
+                || str_contains(mb_strtolower($customer->email ?? ''), $search),
         );
     }
 
@@ -243,7 +244,7 @@ final class Index extends Component implements HasActions, HasSchemas
 
     public function checkout(): void
     {
-        if (empty($this->cart)) {
+        if ($this->cart === []) {
             Notification::make()
                 ->title('Failed Sale!')
                 ->body('Please add items to cart before checkout.')
