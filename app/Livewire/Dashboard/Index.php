@@ -116,6 +116,39 @@ final class Index extends Component
             ->get();
     }
 
+    #[Computed]
+    public function weeklySalesChart(): array
+    {
+        $days = collect(range(6, 0))->map(function ($daysAgo) {
+            $date = now()->subDays($daysAgo);
+
+            return [
+                'label' => $date->format('D'),
+                'date' => $date->toDateString(),
+                'total' => Sale::whereDate('created_at', $date)->sum('total'),
+            ];
+        });
+
+        return [
+            'labels' => $days->pluck('label')->toArray(),
+            'data' => $days->pluck('total')->toArray(),
+        ];
+    }
+
+    public function paymentMethodsChart(): array
+    {
+        return Sale::whereMonth('created_at', now()->month)
+            ->selectRaw('payment_method_id, SUM(total) as total')
+            ->groupBy('payment_method_id')
+            ->with('paymentMethod:id,name')
+            ->get()
+            ->map(callback: fn ($sale) => [
+                'label' => $sale->paymentMethod?->name ?? 'Unknown',
+                'total' => $sale->total,
+            ])
+            ->toArray();
+    }
+
     public function render(): Factory|View
     {
         return view('livewire.dashboard.index');

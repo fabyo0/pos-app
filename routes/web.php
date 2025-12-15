@@ -50,7 +50,7 @@ Route::middleware(['auth'])->group(function (): void {
 
     // Pos
     Route::prefix('pos')->name('pos.')->group(function (): void {
-        Route::get('/', Livewire\POS\Index::class)->name('index');
+        Route::get('/', Livewire\Pos\Index::class)->name('index');
     });
 
     // Management

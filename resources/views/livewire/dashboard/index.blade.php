@@ -80,6 +80,123 @@
         </div>
     </div>
 
+    {{-- Charts Row --}}
+    <div class="grid gap-6 lg:grid-cols-2">
+        {{-- Weekly Sales Chart --}}
+        <div class="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <flux:heading size="lg">Weekly Sales</flux:heading>
+                <flux:badge size="sm" color="zinc">Last 7 days</flux:badge>
+            </div>
+            <div class="h-64"
+                 x-data="{
+                    chart: null,
+                    init() {
+                        this.renderChart();
+                        Livewire.hook('message.processed', () => this.renderChart());
+                    },
+                    renderChart() {
+                        if (this.chart) this.chart.destroy();
+                        const ctx = this.$refs.canvas.getContext('2d');
+                        this.chart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: @js($this->weeklySalesChart['labels']),
+                                datasets: [{
+                                    label: 'Sales',
+                                    data: @js($this->weeklySalesChart['data']),
+                                    borderColor: 'rgb(99, 102, 241)',
+                                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointBackgroundColor: 'rgb(99, 102, 241)',
+                                    pointBorderColor: '#fff',
+                                    pointBorderWidth: 2,
+                                    pointRadius: 4,
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        grid: { color: 'rgba(0,0,0,0.05)' },
+                                        ticks: {
+                                            callback: (value) => '$' + value.toLocaleString()
+                                        }
+                                    },
+                                    x: {
+                                        grid: { display: false }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                 }">
+                <canvas x-ref="canvas"></canvas>
+            </div>
+        </div>
+
+        {{-- Payment Methods Chart --}}
+        <div class="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <flux:heading size="lg">Payment Methods</flux:heading>
+                <flux:badge size="sm" color="zinc">This Month</flux:badge>
+            </div>
+            <div class="h-64"
+                 x-data="{
+                    chart: null,
+                    init() {
+                        this.renderChart();
+                        Livewire.hook('message.processed', () => this.renderChart());
+                    },
+                    renderChart() {
+                        if (this.chart) this.chart.destroy();
+                        const ctx = this.$refs.canvas.getContext('2d');
+                        const data = @js($this->paymentMethodsChart());
+                        this.chart = new Chart(ctx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: data.map(d => d.label),
+                                datasets: [{
+                                    data: data.map(d => d.total),
+                                    backgroundColor: [
+                                        'rgb(16, 185, 129)',
+                                        'rgb(59, 130, 246)',
+                                        'rgb(245, 158, 11)',
+                                        'rgb(139, 92, 246)',
+                                        'rgb(107, 114, 128)'
+                                    ],
+                                    borderWidth: 0,
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            padding: 20,
+                                            usePointStyle: true,
+                                            pointStyle: 'circle'
+                                        }
+                                    }
+                                },
+                                cutout: '65%'
+                            }
+                        });
+                    }
+                 }">
+                <canvas x-ref="canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
     {{-- Main Content --}}
     <div class="grid gap-6 lg:grid-cols-3">
         {{-- Recent Sales --}}
@@ -173,7 +290,7 @@
                         <flux:badge size="sm" color="emerald">OK</flux:badge>
                     @endif
                 </div>
-                <div class="divide-y divide-zinc-200 dark:divide-zinc-700 max-h-64 overflow-y-auto">
+                <div class="divide-y divide-zinc-200 dark:divide-zinc-700 max-h-48 overflow-y-auto">
                     @forelse($this->lowStockList as $inventory)
                         <div class="px-6 py-3 flex items-center justify-between">
                             <span class="text-sm text-zinc-900 dark:text-white truncate max-w-[140px]">
