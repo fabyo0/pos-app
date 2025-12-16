@@ -28,7 +28,7 @@ final class SalesItemFactory extends Factory
         return [
             'sale_id' => Sale::factory(),
             'item_id' => $item->id,
-            'quantity' => fake()->numberBetween(1, 10),
+            'quantity' => $this->faker->numberBetween(1, 10),
             'price' => $item->price,
         ];
     }

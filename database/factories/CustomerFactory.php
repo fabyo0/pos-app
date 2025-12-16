@@ -20,18 +20,18 @@ final class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'phone' => fake()->phoneNumber(),
-            'company_name' => fake()->optional(0.3)->company(),
-            'tax_id' => fake()->optional(0.3)->numerify('##########'),
-            'address' => fake()->optional()->streetAddress(),
-            'city' => fake()->optional()->city(),
-            'state' => fake()->optional()->state(),
-            'postal_code' => fake()->optional()->postcode(),
-            'country' => fake()->optional()->country(),
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'phone' => $this->faker->phoneNumber(),
+            'company_name' => $this->faker->optional(0.3)->company(),
+            'tax_id' => $this->faker->optional(0.3)->numerify('##########'),
+            'address' => $this->faker->optional()->streetAddress(),
+            'city' => $this->faker->optional()->city(),
+            'state' => $this->faker->optional()->state(),
+            'postal_code' => $this->faker->optional()->postcode(),
+            'country' => $this->faker->optional()->country(),
             'is_active' => $this->faker->boolean(),
-            'notes' => fake()->optional(0.2)->sentence(),
+            'notes' => $this->faker->optional(0.2)->sentence(),
         ];
     }
 
