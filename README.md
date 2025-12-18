@@ -226,17 +226,6 @@ DB_DATABASE=pos_system_testing
 | **Alpine.js** | 3.x | JavaScript Framework |
 | **Vite** | 5.x | Asset Bundling |
 
----
-
-## 📚 Documentation
-
-- [Installation Guide](docs/installation.md)
-- [User Manual](docs/user-manual.md)
-- [API Documentation](docs/api.md)
-- [Contributing Guide](CONTRIBUTING.md)
-
----
-
 ## 🗺️ Roadmap
 
 Check our [GitHub Issues](https://github.com/fabyo0/pos-app/issues) for the complete roadmap.
