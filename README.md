@@ -1,4 +1,4 @@
-# 🎉 Laravel POS System
+# POS System
 
 A modern, feature-rich Point of Sale (POS) system built with Laravel 12, Filament 4, and Livewire 3.
 
