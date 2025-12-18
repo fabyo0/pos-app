@@ -60,8 +60,9 @@ A modern, feature-rich Point of Sale (POS) system built with Laravel 12, Filamen
 **Live Demo:** [https://pos-app-yi7setba.on-forge.com](https://pos-app-yi7setba.on-forge.com/login)
 
 **Demo Credentials:**
-- **Email:** `admin@example.com`
-- **Password:** `123`
+- **Email:** admin@example.com
+- **Password:** 123
+
 ---
 
 ## 📋 Requirements
@@ -161,7 +162,7 @@ npm run build
 php artisan serve
 ```
 
-Visit: `http://localhost:8000`
+Visit: http://localhost:8000
 
 ---
 
@@ -169,10 +170,8 @@ Visit: `http://localhost:8000`
 
 After seeding, you can log in with:
 
-- **Email:** `admin@admin.com`
-- **Password:** `password`
-
-> 🔒 **Important:** Change these credentials in production!
+- **Email:** admin@admin.com
+- **Password:** password
 
 ---
 
@@ -218,39 +217,61 @@ DB_DATABASE=pos_system_testing
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **Laravel** | 12.x | Backend Framework |
-| **Filament** | 4.x | Admin Panel |
-| **Livewire** | 3.x | Frontend Reactivity |
-| **MySQL** | 8.x | Database |
-| **Tailwind CSS** | 3.x | Styling |
-| **Alpine.js** | 3.x | JavaScript Framework |
-| **Vite** | 5.x | Asset Bundling |
+| Laravel | 12.x | Backend Framework |
+| Filament | 4.x | Admin Panel |
+| Livewire | 3.x | Frontend Reactivity |
+| MySQL | 8.x | Database |
+| Tailwind CSS | 3.x | Styling |
+| Alpine.js | 3.x | JavaScript Framework |
+| Vite | 5.x | Asset Bundling |
+
+---
 
 ## 🗺️ Roadmap
 
-Check our [GitHub Issues](https://github.com/fabyo0/pos-app/issues) for the complete roadmap.
+### v1.0.0 - Initial Release (Completed)
+- Core POS functionality
+- Product management with categories
+- Shopping cart and checkout
+- Multiple payment methods
+- Basic reporting dashboard
+- Stock tracking
 
-### Phase 2 - Core Features (Q1 2025)
-- [x] Database Notifications
-- [ ] Receipt/Invoice System
-- [ ] Role & Permission Management
-- [ ] Order Management
-- [ ] Social Authentication
-- [ ] Barcode Scanner Support
+### v1.1.0 - Core Features (In Progress)
+- Database Notifications
+- Receipt/Invoice System
+- Role & Permission Management
+- Order Management
+- Social Authentication
+- Barcode Scanner Support
+- Sales List Improvements
 
-### Phase 2.5 - Advanced Features (Q2 2025)
-- [ ] Cash Register Management
-- [ ] Refund/Return System
-- [ ] Advanced Inventory Management
-- [ ] Customer CRM
-- [ ] Discount & Promotion System
-- [ ] Multi-Language Support
+### v1.2.0 - Operations & Cash Management (Planned)
+- Cash Register Management
+- Refund/Return System
+- Hold/Park Orders
 
-### Phase 3 - Enterprise (Q3 2025)
-- [ ] Multi-Store Management
-- [ ] Offline Mode
-- [ ] API & Webhooks
-- [ ] Accounting Integration
+### v1.3.0 - Inventory & Analytics (Planned)
+- Advanced Inventory Management
+- Advanced Reporting & Analytics Dashboard
+
+### v1.4.0 - Customer & Marketing (Planned)
+- Customer CRM
+- Discount & Promotion System
+- Multi-Language Support
+
+### v1.5.0 - Employee & Finance (Planned)
+- Expense Management
+- Employee/Cashier Management
+
+### v2.0.0 - Enterprise Features (Future)
+- Multi-Store Management
+- Offline Mode
+- API & Webhooks
+- Accounting Integration
+- Restaurant Mode
+- E-commerce Integration
+- Mobile App
 
 ---
 
@@ -263,8 +284,6 @@ Contributions are welcome! Please follow these steps:
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct.
 
 ---
 
