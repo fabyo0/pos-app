@@ -1,173 +1,318 @@
-# 🚀 Setup Guide
+# 🎉 Laravel POS System
 
-## ✅ Requirements
+A modern, feature-rich Point of Sale (POS) system built with Laravel 12, Filament 4, and Livewire 3.
 
-Make sure the following are installed on your system:
-
-- **PHP** >= 8.0  
-- **Composer**  
-- **MySQL** (or any other supported database)  
-- **Node.js & npm** *(optional, for frontend assets)*
+[![Laravel](https://img.shields.io/badge/Laravel-12-red.svg)](https://laravel.com)
+[![Filament](https://img.shields.io/badge/Filament-4-orange.svg)](https://filamentphp.com)
+[![Livewire](https://img.shields.io/badge/Livewire-3-pink.svg)](https://livewire.laravel.com)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
 
-## ⚙️ Setup Instructions
+## 📸 Screenshots
 
-### 1. Install Dependencies
+<details>
+<summary>Click to view screenshots</summary>
 
-Install all PHP dependencies via Composer:
+### Dashboard
+<img width="1431" height="733" alt="Screenshot 2025-12-18 at 16 58 27" src="https://github.com/user-attachments/assets/8397546c-6b20-4756-b439-eaf39883393b" />
 
+### POS Interface
+<img width="1419" height="700" alt="Screenshot 2025-12-18 at 16 59 21" src="https://github.com/user-attachments/assets/88ce467d-7a1a-45e9-8706-506d263c9df4" />
+
+### Sales Management
+<img width="1418" height="732" alt="Screenshot 2025-12-18 at 17 00 07" src="https://github.com/user-attachments/assets/808f6c53-8fcc-44dc-b75f-1feac06694d9" />
+
+### Item Management
+<img width="1201" height="690" alt="Screenshot 2025-12-18 at 17 01 11" src="https://github.com/user-attachments/assets/a8ba3547-4b7f-4905-8285-b3a82221525d" />
+
+</details>
+
+---
+
+## ✨ Features
+
+### Core POS Functionality
+- 🛒 **Product Management** - Complete CRUD with categories
+- 🛍️ **Shopping Cart** - Real-time calculations and updates
+- 💳 **Multiple Payment Methods** - Cash, Card, Bank Transfer
+- 💰 **Discount System** - Percentage & fixed amount discounts
+- 👤 **Customer Management** - Track customer purchases
+- 📊 **Stock Tracking** - Real-time inventory validation
+- 🔍 **Advanced Search** - Quick product search with filters
+
+### Dashboard & Reporting
+- 📈 **Sales Statistics** - Comprehensive sales analytics
+- 💵 **Revenue Tracking** - Daily, weekly, monthly reports
+- 📦 **Inventory Overview** - Stock levels at a glance
+- 🔔 **Low Stock Alerts** - Automated notifications
+
+### User Interface
+- 🎨 **Modern Design** - Clean and professional UI
+- ⚡ **Fast & Intuitive** - Optimized for speed
+- 📱 **Mobile Responsive** - Works on all devices
+- 🌙 **Filament Admin** - Powerful admin panel
+
+---
+
+## 🚀 Demo
+
+**Live Demo:** [https://pos-app-yi7setba.on-forge.com](https://pos-app-yi7setba.on-forge.com/login)
+
+**Demo Credentials:**
+- **Email:** `admin@example.com`
+- **Password:** `123`
+---
+
+## 📋 Requirements
+
+Before you begin, ensure your system meets the following requirements:
+
+- **PHP** >= 8.3
+- **Composer** >= 2.0
+- **MySQL** >= 8.0 (or MariaDB >= 10.3)
+- **Node.js** >= 20.0 & **npm** >= 10.0
+- **Git**
+
+### Recommended PHP Extensions
+```
+php-mbstring
+php-xml
+php-bcmath
+php-curl
+php-gd
+php-mysql
+php-zip
+php-intl
+```
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone the Repository
 ```bash
+git clone https://github.com/fabyo0/pos-app.git
+cd pos-app
+```
+
+### 2. Install Dependencies
+```bash
+# Install PHP dependencies
 composer install
+
+# Install Node.js dependencies
+npm install
 ```
 
-If the `.env` file is missing, copy it from the example:
-
+### 3. Environment Configuration
 ```bash
+# Copy environment file
 cp .env.example .env
-```
 
----
-
-### 2. Configure the Database
-
-Laravel uses **MySQL** by default. To use a different database, update `config/database.php` and your `.env` file.
-
-#### Steps:
-1. Install and configure your preferred database.
-2. Create a new database for the project.
-3. Update your `.env` file with the correct credentials:
-   ```env
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=your_database_name
-   DB_USERNAME=your_username
-   DB_PASSWORD=your_password
-   ```
-
----
-
-### 3. Generate Application Key
-
-```bash
+# Generate application key
 php artisan key:generate
 ```
 
----
+### 4. Database Setup
 
-### 4. Run Migrations
-
-Run database migrations to create all necessary tables:
-
-```bash
-php artisan migrate
+Update your `.env` file with database credentials:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=pos_system
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
 ```
 
----
-
-### 5. Seed the Database (Optional)
-
-To populate your database with sample data:
-
+Create the database:
 ```bash
+mysql -u root -p
+CREATE DATABASE pos_system;
+exit;
+```
+
+### 5. Run Migrations & Seeders
+```bash
+# Run migrations
+php artisan migrate
+
+# Seed database with sample data
 php artisan db:seed
 ```
 
----
-
-### 6. File Uploads - Create Storage Symlink
-
-To make uploaded files publicly accessible:
-
+### 6. Create Storage Symlink
 ```bash
 php artisan storage:link
 ```
 
----
+### 7. Build Frontend Assets
+```bash
+# Development
+npm run dev
 
-### 7. Run the Application
+# Production
+npm run build
+```
 
-#### Option 1: Using Laravel's Built-in Server
-
+### 8. Start the Application
 ```bash
 php artisan serve
 ```
 
-#### Option 2: Laravel Valet (Recommended for macOS)
-
-Place your project in the Valet directory and access it via `http://project-name.test`.
+Visit: `http://localhost:8000`
 
 ---
 
-## 🖼️ Frontend (Optional)
+## 🔐 Default Credentials
 
-If your project uses Vite, Laravel Mix, or any frontend build system:
+After seeding, you can log in with:
 
-```bash
-npm install && npm run dev
-```
+- **Email:** `admin@admin.com`
+- **Password:** `password`
 
-> For production:
-```bash
-npm run build
-```
-
----
-
-## 📝 Additional Notes
-
-- Don’t forget to set the correct `APP_URL` in your `.env`:
-   ```env
-   APP_URL=http://localhost:8000
-   ```
-
-- Clear caches if necessary:
-  ```bash
-  php artisan config:clear
-  php artisan cache:clear
-  php artisan route:clear
-  ```
-
----
-
-Happy coding! 🧑‍💻
-
+> 🔒 **Important:** Change these credentials in production!
 
 ---
 
 ## 🧪 Running Tests
 
-This project may include automated tests using Pestphp.
+This project uses **PestPHP** for testing.
 
 ### Run All Tests
-
 ```bash
 php artisan test
 ```
 
-Or directly via Pestphp:
-
+Or using Pest directly:
 ```bash
 ./vendor/bin/pest
 ```
 
-### Recommended: Use a dedicated testing database
+### Run Specific Test Suite
+```bash
+# Feature tests only
+php artisan test --testsuite=Feature
 
-To avoid affecting development or production data, configure a separate database for testing by adding the following to your `.env`:
+# Unit tests only
+php artisan test --testsuite=Unit
+```
 
+### Test with Coverage
+```bash
+php artisan test --coverage
+```
+
+### Testing Database
+
+Configure a separate testing database in `.env.testing`:
 ```env
-DB_DATABASE=your_testing_database
+DB_CONNECTION=mysql
+DB_DATABASE=pos_system_testing
 ```
-
-Then, in `phpunit.xml`, set the appropriate environment:
-
-```xml
-<env name="DB_CONNECTION" value="mysql"/>
-<env name="DB_DATABASE" value="your_testing_database"/>
-```
-
-You can also refresh the test database before each test run with Laravel's RefreshDatabase trait.
 
 ---
 
+## 🛠️ Tech Stack
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **Laravel** | 12.x | Backend Framework |
+| **Filament** | 4.x | Admin Panel |
+| **Livewire** | 3.x | Frontend Reactivity |
+| **MySQL** | 8.x | Database |
+| **Tailwind CSS** | 3.x | Styling |
+| **Alpine.js** | 3.x | JavaScript Framework |
+| **Vite** | 5.x | Asset Bundling |
+
+---
+
+## 📚 Documentation
+
+- [Installation Guide](docs/installation.md)
+- [User Manual](docs/user-manual.md)
+- [API Documentation](docs/api.md)
+- [Contributing Guide](CONTRIBUTING.md)
+
+---
+
+## 🗺️ Roadmap
+
+Check our [GitHub Issues](https://github.com/fabyo0/pos-app/issues) for the complete roadmap.
+
+### Phase 2 - Core Features (Q1 2025)
+- [x] Database Notifications
+- [ ] Receipt/Invoice System
+- [ ] Role & Permission Management
+- [ ] Order Management
+- [ ] Social Authentication
+- [ ] Barcode Scanner Support
+
+### Phase 2.5 - Advanced Features (Q2 2025)
+- [ ] Cash Register Management
+- [ ] Refund/Return System
+- [ ] Advanced Inventory Management
+- [ ] Customer CRM
+- [ ] Discount & Promotion System
+- [ ] Multi-Language Support
+
+### Phase 3 - Enterprise (Q3 2025)
+- [ ] Multi-Store Management
+- [ ] Offline Mode
+- [ ] API & Webhooks
+- [ ] Accounting Integration
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct.
+
+---
+
+## 🐛 Bug Reports & Feature Requests
+
+Found a bug or have a feature request? Please [open an issue](https://github.com/fabyo0/pos-app/issues/new).
+
+---
+
+## 📝 License
+
+This project is open-sourced software licensed under the [MIT license](LICENSE).
+
+---
+
+## 🙏 Acknowledgments
+
+- [Laravel](https://laravel.com) - The PHP Framework
+- [Filament](https://filamentphp.com) - Admin Panel
+- [Livewire](https://livewire.laravel.com) - Reactive Components
+- [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS
+
+---
+
+## 💖 Support
+
+If you find this project helpful, please give it a ⭐️!
+
+---
+
+## 📊 Project Stats
+
+![GitHub stars](https://img.shields.io/github/stars/fabyo0/pos-app?style=social)
+![GitHub forks](https://img.shields.io/github/forks/fabyo0/pos-app?style=social)
+![GitHub issues](https://img.shields.io/github/issues/fabyo0/pos-app)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/fabyo0/pos-app)
+
+---
+
+**Built with ❤️ by [Fabyo](https://github.com/fabyo0)**
