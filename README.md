@@ -225,55 +225,7 @@ DB_DATABASE=pos_system_testing
 | Alpine.js | 3.x | JavaScript Framework |
 | Vite | 5.x | Asset Bundling |
 
----
-
-## 🗺️ Roadmap
-
-### v1.0.0 - Initial Release (Completed)
-- Core POS functionality
-- Product management with categories
-- Shopping cart and checkout
-- Multiple payment methods
-- Basic reporting dashboard
-- Stock tracking
-
-### v1.1.0 - Core Features (In Progress)
-- Database Notifications
-- Receipt/Invoice System
-- Role & Permission Management
-- Order Management
-- Social Authentication
-- Barcode Scanner Support
-- Sales List Improvements
-
-### v1.2.0 - Operations & Cash Management (Planned)
-- Cash Register Management
-- Refund/Return System
-- Hold/Park Orders
-
-### v1.3.0 - Inventory & Analytics (Planned)
-- Advanced Inventory Management
-- Advanced Reporting & Analytics Dashboard
-
-### v1.4.0 - Customer & Marketing (Planned)
-- Customer CRM
-- Discount & Promotion System
-- Multi-Language Support
-
-### v1.5.0 - Employee & Finance (Planned)
-- Expense Management
-- Employee/Cashier Management
-
-### v2.0.0 - Enterprise Features (Future)
-- Multi-Store Management
-- Offline Mode
-- API & Webhooks
-- Accounting Integration
-- Restaurant Mode
-- E-commerce Integration
-- Mobile App
-
----
+---------------------------------
 
 ## 🤝 Contributing
 
