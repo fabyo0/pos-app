@@ -65,7 +65,7 @@ final class CreateUser extends Component implements HasActions, HasSchemas
                             ->password()
                             ->required()
                             ->rule(Password::defaults())
-                            ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
+                            ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                             ->revealable(),
 
                         TextInput::make('password_confirmation')
@@ -86,7 +86,7 @@ final class CreateUser extends Component implements HasActions, HasSchemas
                             ->relationship('roles', 'name')
                             ->preload()
                             ->searchable()
-                            ->getOptionLabelFromRecordUsing(fn($record): string => Str::ucfirst($record->name))
+                            ->getOptionLabelFromRecordUsing(fn ($record): string => Str::ucfirst($record->name))
                             ->placeholder('Select roles...')
                             ->helperText('Users can have multiple roles. Each role grants specific permissions.')
                             ->columnSpanFull(),
