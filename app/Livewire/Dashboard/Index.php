@@ -119,7 +119,7 @@ final class Index extends Component
     #[Computed]
     public function weeklySalesChart(): array
     {
-        $days = collect(range(6, 0))->map(function ($daysAgo) {
+        $days = collect(range(6, 0))->map(function ($daysAgo): array {
             $date = now()->subDays($daysAgo);
 
             return [
@@ -142,7 +142,7 @@ final class Index extends Component
             ->groupBy('payment_method_id')
             ->with('paymentMethod:id,name')
             ->get()
-            ->map(callback: fn ($sale) => [
+            ->map(callback: fn($sale): array => [
                 'label' => $sale->paymentMethod?->name ?? 'Unknown',
                 'total' => $sale->total,
             ])

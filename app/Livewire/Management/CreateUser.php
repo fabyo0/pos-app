@@ -84,7 +84,6 @@ final class CreateUser extends Component implements HasActions, HasSchemas
                         Select::make('roles')
                             ->label('Roles')
                             ->relationship('roles', 'name')
-                            ->multiple()
                             ->preload()
                             ->searchable()
                             ->getOptionLabelFromRecordUsing(fn($record): string => Str::ucfirst($record->name))
