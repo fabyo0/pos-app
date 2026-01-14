@@ -24,30 +24,68 @@ final class SocialiteController
         return Socialite::driver($provider)->redirect();
     }
 
-    public function callBackSocial(Request $request, string $provider)
+    public function callBackSocial(Request $request, string $provider): RedirectResponse
     {
-
         $this->validateProvider($request);
 
-        $response = Socialite::driver($provider)->user();
+        try {
+            $response = Socialite::driver($provider)->user();
 
-        $user = User::firstOrCreate(
-            ['email' => $response->getEmail()],
-            ['password' => Str::password()],
-        );
-        $data = [$provider . '_id' => $response->getId()];
+            // Try to find user by provider ID first
+            $user = User::where($provider . '_id', $response->getId())->first();
 
-        if ($user->wasRecentlyCreated) {
-            $data['name'] = $response->getName() ?? $response->getNickname();
+            if ($user) {
+                Auth::login($user, remember: true);
+                return redirect()->intended(route('dashboard'));
+            }
+
+            // Try to find by email
+            $user = User::where('email', $response->getEmail())->first();
+
+            if ($user) {
+                // Link social account to existing user
+                $user->update([
+                    $provider . '_id' => $response->getId(),
+                ]);
+
+                Auth::login($user, remember: true);
+                return redirect()->intended(route('dashboard'));
+            }
+
+            // Create new user
+            $user = User::create([
+                'name' => $this->generateNameFromEmail($response, $provider),  // ✅ Helper method
+                'email' => $response->getEmail(),
+                'password' => bcrypt(Str::random(32)),
+                $provider . '_id' => $response->getId(),
+                'email_verified_at' => now(),
+            ]);
 
             event(new Registered($user));
+
+            Auth::login($user, remember: true);
+
+            return redirect()->intended(route('dashboard'));
+
+        } catch (\Exception $e) {
+            return redirect()->route('login')
+                ->with('error', __('Unable to login with :provider. Please try again.', ['provider' => ucfirst($provider)]));
+        }
+    }
+
+    private function generateNameFromEmail($response, string $provider): string
+    {
+
+        if ($name = $response->getName() ?? $response->getNickname()) {
+            return $name;
         }
 
-        $user->update($data);
+        $email = $response->getEmail();
+        $username = explode('@', $email)[0];
 
-        Auth::login($user, remember: true);
+        $cleanName = ucfirst(str_replace(['.', '_', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], ' ', $username));
 
-        return redirect()->intended(route('dashboard'));
+        return trim($cleanName) ?: 'User';
     }
 
     protected function validateProvider(Request $request): array
