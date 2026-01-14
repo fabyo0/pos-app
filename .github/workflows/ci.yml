@@ -1,23 +1,17 @@
 name: CI
-
 on:
   push:
   pull_request:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
-
 jobs:
   tests:
-
     name: PHP ${{ matrix.php }}
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         php: ['8.1', '8.2', '8.3', '8.4']
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,6 +31,12 @@ jobs:
 
       - name: Copy .env
         run: cp .env.example .env
+
+      - name: Install Composer Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Generate Application Key
+        run: php artisan key:generate
 
       - name: Install NPM
         run: npm install

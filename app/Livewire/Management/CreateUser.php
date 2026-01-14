@@ -47,7 +47,6 @@ final class CreateUser extends Component implements HasActions, HasSchemas
                             ->required()
                             ->maxLength(255)
                             ->autofocus(),
-
                         TextInput::make('email')
                             ->label('Email Address')
                             ->placeholder('john@example.com')
