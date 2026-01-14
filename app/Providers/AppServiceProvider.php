@@ -15,13 +15,9 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use Override;
 
 final class AppServiceProvider extends ServiceProvider
 {
-    #[Override]
-    public function register(): void {}
-
     public function boot(): void
     {
         $this->configureCommands();
@@ -59,7 +55,7 @@ final class AppServiceProvider extends ServiceProvider
     private function configurePasswordValidation(): void
     {
         Password::defaults(
-            fn() => $this->app->isProduction()
+            fn () => $this->app->isProduction()
                 ? Password::min(8)
                     ->uncompromised()
                     ->letters()
@@ -79,24 +75,24 @@ final class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for(
             'global',
-            fn(Request $request) => Limit::perMinute(60)->by($request->ip()),
+            fn (Request $request) => Limit::perMinute(60)->by($request->ip()),
         );
 
         RateLimiter::for(
             'api',
-            fn(Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()),
+            fn (Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()),
         );
 
         RateLimiter::for(
             'auth',
-            fn(Request $request) => Limit::perMinute(5)->by($request->ip()),
+            fn (Request $request) => Limit::perMinute(5)->by($request->ip()),
         );
 
         RateLimiter::for(
             'login',
-            fn(Request $request) => Limit::perMinute(5)
+            fn (Request $request) => Limit::perMinute(5)
                 ->by($request->input('email') . '|' . $request->ip())
-                ->response(fn() => response()->json(['message' => 'Too many login attempts.'], 429)),
+                ->response(fn () => response()->json(['message' => 'Too many login attempts.'], 429)),
         );
     }
 }

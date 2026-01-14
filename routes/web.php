@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Livewire;
 use App\Livewire\Customer\Show;
 use App\Livewire\Items\Create;
@@ -19,11 +20,18 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
-Route::get('/', fn(): Factory|View => view('welcome'))->name('home');
+Route::get('/', fn (): Factory|View => view('welcome'))->name('home');
 
 Route::get('dashboard', Livewire\Dashboard\Index::class)
     ->middleware(['auth'])
     ->name('dashboard');
+
+// Social Auth
+Route::get('auth/{provider}/redirect', [SocialiteController::class, 'loginSocial'])
+    ->name('socialite.auth');
+
+Route::get('auth/{provider}/callback', [SocialiteController::class, 'callbackSocial'])
+    ->name('socialite.callback');
 
 Route::middleware(['auth'])->group(function (): void {
 
@@ -40,7 +48,7 @@ Route::middleware(['auth'])->group(function (): void {
     // Customers
     Route::prefix('customers')->name('customers.')->group(function (): void {
         Route::get('/', Livewire\Customer\Index::class)->name('index');
-        Route::get('/creaddte', Livewire\Customer\Create::class)->name('create');
+        Route::get('/create', Livewire\Customer\Create::class)->name('create');
         Route::get('/edit/{record}', Livewire\Customer\Edit::class)->name('edit');
         Route::get('/{record}', Show::class)->name('show');
     });
