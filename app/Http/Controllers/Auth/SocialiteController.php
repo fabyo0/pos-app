@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -36,6 +37,7 @@ final class SocialiteController
 
             if ($user) {
                 Auth::login($user, remember: true);
+
                 return redirect()->intended(route('dashboard'));
             }
 
@@ -49,12 +51,13 @@ final class SocialiteController
                 ]);
 
                 Auth::login($user, remember: true);
+
                 return redirect()->intended(route('dashboard'));
             }
 
             // Create new user
             $user = User::create([
-                'name' => $this->generateNameFromEmail($response, $provider),  // ✅ Helper method
+                'name' => $this->generateNameFromEmail($response),
                 'email' => $response->getEmail(),
                 'password' => bcrypt(Str::random(32)),
                 $provider . '_id' => $response->getId(),
@@ -67,32 +70,34 @@ final class SocialiteController
 
             return redirect()->intended(route('dashboard'));
 
-        } catch (\Exception $e) {
+        } catch (Exception) {
             return redirect()->route('login')
                 ->with('error', __('Unable to login with :provider. Please try again.', ['provider' => ucfirst($provider)]));
         }
-    }
-
-    private function generateNameFromEmail($response, string $provider): string
-    {
-
-        if ($name = $response->getName() ?? $response->getNickname()) {
-            return $name;
-        }
-
-        $email = $response->getEmail();
-        $username = explode('@', $email)[0];
-
-        $cleanName = ucfirst(str_replace(['.', '_', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], ' ', $username));
-
-        return trim($cleanName) ?: 'User';
     }
 
     protected function validateProvider(Request $request): array
     {
         return $this->getValidationFactory()->make(
             $request->route()->parameters(),
-            ['provider' => 'in:facebook,google,github'],
+            ['provider' => 'in:facebook,google'],
         )->validate();
+    }
+
+    private function generateNameFromEmail($response): string
+    {
+        // Try to get name from social provider
+        if ($name = $response->getName() ?? $response->getNickname()) {
+            return $name;
+        }
+
+        // Generate from email
+        $email = $response->getEmail();
+        $username = explode('@', (string) $email)[0];
+
+        // Clean up username (remove numbers, dots, underscores)
+        $cleanName = ucfirst(str_replace(['.', '_', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], ' ', $username));
+
+        return mb_trim($cleanName) ?: 'User';
     }
 }
