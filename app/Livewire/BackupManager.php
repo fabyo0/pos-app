@@ -32,7 +32,7 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn () => null)
+            ->query(fn() => null)
             ->columns([
                 TextColumn::make('name')
                     ->label('Backup Name')
@@ -53,14 +53,14 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
                     ->label('Download')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
-                    ->action(fn (array $record) => $this->downloadBackup($record['path'])),
+                    ->action(fn(array $record) => $this->downloadBackup($record['path'])),
 
                 Action::make('delete')
                     ->label('Delete')
                     ->icon('heroicon-o-trash')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->action(fn (array $record) => $this->deleteBackup($record['path'])),
+                    ->action(fn(array $record) => $this->deleteBackup($record['path'])),
             ])
             ->bulkActions([
                 BulkAction::make('delete')
@@ -68,13 +68,13 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
                     ->icon('heroicon-o-trash')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->action(fn (Collection $records) => $this->deleteMultiple($records)),
+                    ->action(fn(Collection $records) => $this->deleteMultiple($records)),
 
                 BulkAction::make('download_all')
                     ->label('Download Selected')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
-                    ->action(fn (Collection $records) => $this->downloadMultiple($records)),
+                    ->action(fn(Collection $records) => $this->downloadMultiple($records)),
 
             ])
 
@@ -86,10 +86,10 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
                     ->requiresConfirmation()
                     ->modalHeading('Create Database Backup')
                     ->modalDescription('This will create a backup of your database. Are you sure?')
-                    ->action(fn () => $this->createBackup()),
+                    ->action(fn() => $this->createBackup()),
             ])
             ->paginated(false)
-            ->records(fn () => $this->getBackups())
+            ->records(fn() => $this->getBackups())
             ->emptyStateHeading('No backups found')
             ->emptyStateDescription('Create your first backup by clicking the button above.')
             ->emptyStateIcon('heroicon-o-circle-stack');
@@ -256,8 +256,8 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
         $files = $disk->files($backupPath);
 
         return collect($files)
-            ->filter(fn ($file) => str_ends_with($file, '.zip'))
-            ->map(fn ($file) => [
+            ->filter(fn($file) => str_ends_with($file, '.zip'))
+            ->map(fn($file) => [
                 'name' => basename($file),
                 'path' => $file,
                 'size' => $this->formatBytes($disk->size($file)),
