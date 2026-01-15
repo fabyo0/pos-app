@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Livewire;
+use App\Livewire\BackupManager;
 use App\Livewire\Customer\Show;
 use App\Livewire\Items\Create;
 use App\Livewire\Items\Edit;
@@ -67,6 +68,10 @@ Route::middleware(['auth'])->group(function (): void {
         Route::get('/user/create', CreateUser::class)->name('user.create');
         Route::get('/payment-methods', ListPaymentMethods::class)->name('payment-methods');
     });
+
+    // Backup
+
+    Route::get('/backups', BackupManager::class)->name('backups.index');
 
     // Settings
     Route::redirect('settings', 'settings/profile');

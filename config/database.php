@@ -60,6 +60,11 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
+            'dump' => [
+                'dump_binary_path' => env('DB_DUMP_PATH', '/usr/bin'),
+                'use_single_transaction' => true,
+                'timeout' => 60 * 5,
+            ],
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],

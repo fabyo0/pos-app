@@ -245,6 +245,15 @@
                 {{ __('Sales') }}
             </flux:navlist.item>
         </flux:navlist.group>
+
+        <flux:separator class="my-3"/>
+
+        <flux:navlist.group :heading="__('System')" class="grid">
+            <flux:navlist.item wire:navigate icon="circle-stack" :href="route('backups.index')"
+                               :current="request()->routeIs('backups.index')">
+                {{ __('Database Backups') }}
+            </flux:navlist.item>
+        </flux:navlist.group>
     </flux:navlist>
 
     <flux:spacer/>
