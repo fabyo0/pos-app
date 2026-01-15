@@ -21,7 +21,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Log;
 
 final class BackupManager extends Component implements HasActions, HasForms, HasTable
 {
@@ -32,7 +32,7 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn() => null)
+            ->query(fn () => null)
             ->columns([
                 TextColumn::make('name')
                     ->label('Backup Name')
@@ -53,14 +53,14 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
                     ->label('Download')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
-                    ->action(fn(array $record) => $this->downloadBackup($record['path'])),
+                    ->action(fn (array $record) => $this->downloadBackup($record['path'])),
 
                 Action::make('delete')
                     ->label('Delete')
                     ->icon('heroicon-o-trash')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->action(fn(array $record) => $this->deleteBackup($record['path'])),
+                    ->action(fn (array $record) => $this->deleteBackup($record['path'])),
             ])
             ->bulkActions([
                 BulkAction::make('delete')
@@ -68,8 +68,16 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
                     ->icon('heroicon-o-trash')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->action(fn(Collection $records) => $this->deleteMultiple($records)),
+                    ->action(fn (Collection $records) => $this->deleteMultiple($records)),
+
+                BulkAction::make('download_all')
+                    ->label('Download Selected')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success')
+                    ->action(fn (Collection $records) => $this->downloadMultiple($records)),
+
             ])
+
             ->headerActions([
                 Action::make('create')
                     ->label('Create Backup')
@@ -78,10 +86,10 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
                     ->requiresConfirmation()
                     ->modalHeading('Create Database Backup')
                     ->modalDescription('This will create a backup of your database. Are you sure?')
-                    ->action(fn() => $this->createBackup()),
+                    ->action(fn () => $this->createBackup()),
             ])
             ->paginated(false)
-            ->records(fn() => $this->getBackups())
+            ->records(fn () => $this->getBackups())
             ->emptyStateHeading('No backups found')
             ->emptyStateDescription('Create your first backup by clicking the button above.')
             ->emptyStateIcon('heroicon-o-circle-stack');
@@ -99,7 +107,7 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
                 ->success()
                 ->send();
 
-            \Log::info('Backup output: ' . $output);
+            Log::info('Backup output: ' . $output);
 
             $this->dispatch('$refresh');
 
@@ -110,8 +118,8 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
                 ->danger()
                 ->send();
 
-            \Log::error('Backup error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            Log::error('Backup error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
         }
     }
 
@@ -119,7 +127,7 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
     {
         $disk = Storage::disk(config('backup.backup.destination.disks')[0] ?? 'local');
 
-        if (!$disk->exists($path)) {
+        if ( ! $disk->exists($path)) {
             Notification::make()
                 ->title('File Not Found')
                 ->body('The backup file could not be found.')
@@ -178,12 +186,70 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
         $this->dispatch('$refresh');
     }
 
+    public function getTotalSize(): string
+    {
+        $totalBytes = $this->getBackups()->sum('size_bytes');
+
+        return $this->formatBytes($totalBytes);
+    }
+
+    public function getLastBackupTime(): ?string
+    {
+        $lastBackup = $this->getBackups()->first();
+
+        if ( ! $lastBackup) {
+            return null;
+        }
+
+        return \Carbon\Carbon::createFromTimestamp($lastBackup['date'])->diffForHumans();
+    }
+
+    public function getDiskSpaceWarning(): ?string
+    {
+        try {
+            $disk = Storage::disk(config('backup.backup.destination.disks')[0] ?? 'local');
+            $path = $disk->path('');
+
+            $totalSpace = disk_total_space($path);
+            $freeSpace = disk_free_space($path);
+
+            if ($totalSpace === false || $freeSpace === false) {
+                return null;
+            }
+
+            $usedPercent = (($totalSpace - $freeSpace) / $totalSpace) * 100;
+
+            if ($usedPercent > 90) {
+                return __('Critical: Disk space is running low (:percent% used). Please free up space or delete old backups.', [
+                    'percent' => round($usedPercent, 1),
+                ]);
+            }
+
+            if ($usedPercent > 80) {
+                return __('Warning: Disk space usage is high (:percent% used). Consider cleaning up old backups.', [
+                    'percent' => round($usedPercent, 1),
+                ]);
+            }
+
+            return null;
+        } catch (Exception $e) {
+            Log::warning('Failed to check disk space: ' . $e->getMessage());
+
+            return null;
+        }
+    }
+
+    public function render(): View
+    {
+        return view('livewire.backup-manager');
+    }
+
     protected function getBackups(): Collection
     {
         $disk = Storage::disk(config('backup.backup.destination.disks')[0] ?? 'local');
         $backupPath = config('backup.backup.name');
 
-        if (! $disk->exists($backupPath)) {
+        if ( ! $disk->exists($backupPath)) {
             return collect();
         }
 
@@ -203,12 +269,6 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
             ->values();
     }
 
-    public function getTotalSize(): string
-    {
-        $totalBytes = $this->getBackups()->sum('size_bytes');
-        return $this->formatBytes($totalBytes);
-    }
-
     protected function formatBytes(int $bytes, int $precision = 2): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -218,10 +278,5 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
         }
 
         return round($bytes, $precision) . ' ' . $units[$i];
-    }
-
-    public function render(): View
-    {
-        return view('livewire.backup-manager');
     }
 }
