@@ -181,17 +181,17 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
     protected function getBackups(): Collection
     {
         $disk = Storage::disk(config('backup.backup.destination.disks')[0] ?? 'local');
-        $backupPath = 'backups';
+        $backupPath = config('backup.backup.name');
 
-        if (!$disk->exists($backupPath)) {
+        if (! $disk->exists($backupPath)) {
             return collect();
         }
 
         $files = $disk->files($backupPath);
 
         return collect($files)
-            ->filter(fn($file) => str_ends_with($file, '.zip'))
-            ->map(fn($file) => [
+            ->filter(fn ($file) => str_ends_with($file, '.zip'))
+            ->map(fn ($file) => [
                 'name' => basename($file),
                 'path' => $file,
                 'size' => $this->formatBytes($disk->size($file)),
@@ -202,7 +202,6 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
             ->sortByDesc('date')
             ->values();
     }
-
 
     public function getTotalSize(): string
     {
