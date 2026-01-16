@@ -12,6 +12,7 @@ use App\Livewire\Items\Index;
 use App\Livewire\Management\CreateUser;
 use App\Livewire\Management\ListPaymentMethods;
 use App\Livewire\Management\ListUsers;
+use App\Livewire\Management\Roles;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -74,6 +75,11 @@ Route::middleware(['auth'])->group(function (): void {
 
     // Settings
     Route::redirect('settings', 'settings/profile');
+
+    // Roles Management
+    Route::get('/management/roles', Roles::class)
+        ->name('management.roles')
+        ->middleware('can:roles.view');
 
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');

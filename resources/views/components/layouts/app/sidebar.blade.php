@@ -32,37 +32,45 @@
         <flux:menu class="w-56">
             <flux:menu.group heading="{{ __('Quick Actions') }}">
 
-                <flux:menu.item
-                    wire:navigate
-                    icon="shopping-cart"
-                    :href="route('pos.index')"
-                >
-                    {{ __('POS') }}
-                </flux:menu.item>
+                @can('sales.create')
+                    <flux:menu.item
+                        wire:navigate
+                        icon="shopping-cart"
+                        :href="route('pos.index')"
+                    >
+                        {{ __('POS') }}
+                    </flux:menu.item>
+                @endcan
 
-                <flux:menu.item
-                    wire:navigate
-                    icon="chart-bar"
-                    :href="route('sales.index')"
-                >
-                    {{ __('Sales') }}
-                </flux:menu.item>
+                @can('sales.view')
+                    <flux:menu.item
+                        wire:navigate
+                        icon="chart-bar"
+                        :href="route('sales.index')"
+                    >
+                        {{ __('Sales') }}
+                    </flux:menu.item>
+                @endcan
 
-                <flux:menu.item
-                    wire:navigate
-                    icon="users"
-                    :href="route('customers.index')"
-                >
-                    {{ __('Customers') }}
-                </flux:menu.item>
+                @can('customers.view')
+                    <flux:menu.item
+                        wire:navigate
+                        icon="users"
+                        :href="route('customers.index')"
+                    >
+                        {{ __('Customers') }}
+                    </flux:menu.item>
+                @endcan
 
-                <flux:menu.item
-                    wire:navigate
-                    icon="cube"
-                    :href="route('items.index')"
-                >
-                    {{ __('Items') }}
-                </flux:menu.item>
+                @can('items.view')
+                    <flux:menu.item
+                        wire:navigate
+                        icon="cube"
+                        :href="route('items.index')"
+                    >
+                        {{ __('Items') }}
+                    </flux:menu.item>
+                @endcan
 
             </flux:menu.group>
         </flux:menu>
@@ -193,67 +201,105 @@
     </a>
 
     {{-- POS Button - Primary Action --}}
-    <div class="px-3 my-4">
-        <flux:button wire:navigate icon="shopping-bag" href="{{ route('pos.index') }}" variant="primary"
-                     class="w-full justify-center">
-            {{ __('New Sale') }}
-        </flux:button>
-    </div>
+    @can('sales.create')
+        <div class="px-3 my-4">
+            <flux:button wire:navigate icon="shopping-bag" href="{{ route('pos.index') }}" variant="primary"
+                         class="w-full justify-center">
+                {{ __('New Sale') }}
+            </flux:button>
+        </div>
+    @endcan
+
     <flux:navlist variant="outline">
-        <flux:navlist.group :heading="__('Platform')" class="grid">
-            <flux:navlist.item wire:navigate icon="home" :href="route('dashboard')"
-                               :current="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </flux:navlist.item>
-        </flux:navlist.group>
+        {{-- Dashboard - Always visible --}}
+        @can('dashboard.view')
+            <flux:navlist.group :heading="__('Platform')" class="grid">
+                <flux:navlist.item wire:navigate icon="home" :href="route('dashboard')"
+                                   :current="request()->routeIs('dashboard')">
+                    {{ __('Dashboard') }}
+                </flux:navlist.item>
+            </flux:navlist.group>
 
-        <flux:separator class="my-3"/>
+            <flux:separator class="my-3"/>
+        @endcan
 
-        <flux:navlist.group :heading="__('Management')" class="grid">
-            <flux:navlist.item wire:navigate icon="users" :href="route('customers.index')"
-                               :current="request()->routeIs('customers.index')">
-                {{ __('Customers') }}
-            </flux:navlist.item>
-            <flux:navlist.item wire:navigate icon="banknotes" :href="route('management.payment-methods')"
-                               :current="request()->routeIs('management.payment-methods')">
-                {{ __('Payment Methods') }}
-            </flux:navlist.item>
-            <flux:navlist.item wire:navigate icon="user-group" :href="route('management.users')"
-                               :current="request()->routeIs('management.users')">
-                {{ __('Users') }}
-            </flux:navlist.item>
-        </flux:navlist.group>
+        {{-- Management Section --}}
+        @canany(['customers.view', 'payment-methods.view', 'users.view', 'roles.view'])
+            <flux:navlist.group :heading="__('Management')" class="grid">
+                @can('customers.view')
+                    <flux:navlist.item wire:navigate icon="users" :href="route('customers.index')"
+                                       :current="request()->routeIs('customers.index')">
+                        {{ __('Customers') }}
+                    </flux:navlist.item>
+                @endcan
 
-        <flux:separator class="my-3"/>
+                @can('payment-methods.view')
+                    <flux:navlist.item wire:navigate icon="banknotes" :href="route('management.payment-methods')"
+                                       :current="request()->routeIs('management.payment-methods')">
+                        {{ __('Payment Methods') }}
+                    </flux:navlist.item>
+                @endcan
 
-        <flux:navlist.group :heading="__('Inventory')" class="grid">
-            <flux:navlist.item wire:navigate icon="cube" :href="route('items.index')"
-                               :current="request()->routeIs('items.index')">
-                {{ __('Items') }}
-            </flux:navlist.item>
-            <flux:navlist.item wire:navigate icon="queue-list" :href="route('inventories')"
-                               :current="request()->routeIs('inventories')">
-                {{ __('Inventory') }}
-            </flux:navlist.item>
-        </flux:navlist.group>
+                @can('users.view')
+                    <flux:navlist.item wire:navigate icon="user-group" :href="route('management.users')"
+                                       :current="request()->routeIs('management.users')">
+                        {{ __('Users') }}
+                    </flux:navlist.item>
+                @endcan
 
-        <flux:separator class="my-3"/>
+                @can('roles.view')
+                    <flux:navlist.item wire:navigate icon="shield-check" :href="route('management.roles')"
+                                       :current="request()->routeIs('management.roles')">
+                        {{ __('Roles & Permissions') }}
+                    </flux:navlist.item>
+                @endcan
+            </flux:navlist.group>
 
-        <flux:navlist.group :heading="__('Sales')" class="grid">
-            <flux:navlist.item wire:navigate icon="chart-bar" :href="route('sales.index')"
-                               :current="request()->routeIs('sales.index')">
-                {{ __('Sales') }}
-            </flux:navlist.item>
-        </flux:navlist.group>
+            <flux:separator class="my-3"/>
+        @endcanany
 
-        <flux:separator class="my-3"/>
+        {{-- Inventory Section --}}
+        @canany(['items.view', 'inventory.view'])
+            <flux:navlist.group :heading="__('Inventory')" class="grid">
+                @can('items.view')
+                    <flux:navlist.item wire:navigate icon="cube" :href="route('items.index')"
+                                       :current="request()->routeIs('items.index')">
+                        {{ __('Items') }}
+                    </flux:navlist.item>
+                @endcan
 
-        <flux:navlist.group :heading="__('System')" class="grid">
-            <flux:navlist.item wire:navigate icon="circle-stack" :href="route('backups.index')"
-                               :current="request()->routeIs('backups.index')">
-                {{ __('Database Backups') }}
-            </flux:navlist.item>
-        </flux:navlist.group>
+                @can('inventory.view')
+                    <flux:navlist.item wire:navigate icon="queue-list" :href="route('inventories')"
+                                       :current="request()->routeIs('inventories')">
+                        {{ __('Inventory') }}
+                    </flux:navlist.item>
+                @endcan
+            </flux:navlist.group>
+
+            <flux:separator class="my-3"/>
+        @endcanany
+
+        {{-- Sales Section --}}
+        @can('sales.view')
+            <flux:navlist.group :heading="__('Sales')" class="grid">
+                <flux:navlist.item wire:navigate icon="chart-bar" :href="route('sales.index')"
+                                   :current="request()->routeIs('sales.index')">
+                    {{ __('Sales') }}
+                </flux:navlist.item>
+            </flux:navlist.group>
+
+            <flux:separator class="my-3"/>
+        @endcan
+
+        {{-- System Section --}}
+        @can('backups.view')
+            <flux:navlist.group :heading="__('System')" class="grid">
+                <flux:navlist.item wire:navigate icon="circle-stack" :href="route('backups.index')"
+                                   :current="request()->routeIs('backups.index')">
+                    {{ __('Database Backups') }}
+                </flux:navlist.item>
+            </flux:navlist.group>
+        @endcan
     </flux:navlist>
 
     <flux:spacer/>
