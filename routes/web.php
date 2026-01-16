@@ -70,7 +70,6 @@ Route::middleware(['auth'])->group(function (): void {
     });
 
     // Backup
-
     Route::get('/backups', BackupManager::class)->name('backups.index');
 
     // Settings

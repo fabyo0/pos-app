@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use Carbon\Carbon;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
@@ -32,7 +33,7 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn() => null)
+            ->query(fn(): null => null)
             ->columns([
                 TextColumn::make('name')
                     ->label('Backup Name')
@@ -89,7 +90,7 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
                     ->action(fn() => $this->createBackup()),
             ])
             ->paginated(false)
-            ->records(fn() => $this->getBackups())
+            ->records(fn(): Collection => $this->getBackups())
             ->emptyStateHeading('No backups found')
             ->emptyStateDescription('Create your first backup by clicking the button above.')
             ->emptyStateIcon('heroicon-o-circle-stack');
@@ -201,7 +202,7 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
             return null;
         }
 
-        return \Carbon\Carbon::createFromTimestamp($lastBackup['date'])->diffForHumans();
+        return Carbon::createFromTimestamp($lastBackup['date'])->diffForHumans();
     }
 
     public function getDiskSpaceWarning(): ?string
@@ -256,8 +257,8 @@ final class BackupManager extends Component implements HasActions, HasForms, Has
         $files = $disk->files($backupPath);
 
         return collect($files)
-            ->filter(fn($file) => str_ends_with($file, '.zip'))
-            ->map(fn($file) => [
+            ->filter(fn($file): bool => str_ends_with($file, '.zip'))
+            ->map(fn($file): array => [
                 'name' => basename($file),
                 'path' => $file,
                 'size' => $this->formatBytes($disk->size($file)),
