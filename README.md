@@ -61,7 +61,7 @@ A modern, feature-rich Point of Sale (POS) system built with Laravel 12, Filamen
 
 **Demo Credentials:**
 - **Email:** admin@example.com
-- **Password:** 123
+- **Password:** password
 
 ---
 
