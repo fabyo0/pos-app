@@ -381,8 +381,19 @@
         @endcanany
 
         {{-- System --}}
-        @canany(['backups.view', 'settings.view'])
-            <flux:navlist.group :heading="__('System')" expandable :expanded="request()->routeIs('backups.*', 'settings.*')">
+        @canany(['backups.view', 'settings.view', 'authentication-logs.view'])
+            <flux:navlist.group :heading="__('System')" expandable :expanded="request()->routeIs('backups.*', 'settings.*', 'management.authentication-logs*')">
+                @can('authentication-logs.view')
+                    <flux:navlist.item
+                        wire:navigate
+                        icon="finger-print"
+                        :href="route('management.authentication-logs')"
+                        :current="request()->routeIs('management.authentication-logs*')"
+                    >
+                        {{ __('Auth Logs') }}
+                    </flux:navlist.item>
+                @endcan
+
                 @can('backups.view')
                     <flux:navlist.item
                         wire:navigate
@@ -405,7 +416,6 @@
                 @endcan
 
                 <flux:navlist.item
-                    wire:navigate
                     icon="document-text"
                     href="{{ url('log-viewer') }}"
                     target="_blank"

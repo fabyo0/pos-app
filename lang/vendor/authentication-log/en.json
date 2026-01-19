@@ -1,0 +1,22 @@
+{
+    "A failed login to your account": "A failed login to your account",
+    "Account:": "Account:",
+    "Browser:": "Browser:",
+    "Hello!": "Hello!",
+    "If this was not you, please secure your account immediately by changing your password.": "If this was not you, please secure your account immediately by changing your password.",
+    "If this was you, you can ignore this alert. If you suspect any suspicious activity on your account, please change your password.": "If this was you, you can ignore this alert. If you suspect any suspicious activity on your account, please change your password.",
+    "IP Address:": "IP Address:",
+    "Location:": "Location:",
+    "Multiple Failed Logins": "Multiple Failed Logins",
+    "Rapid Location Change": "Rapid Location Change",
+    "Regards,": "Regards,",
+    "Suspicious activity detected on your :app account": "Suspicious activity detected on your :app account",
+    "Suspicious activity detected on your :app account: :activity": "Suspicious activity detected on your :app account: :activity",
+    "There has been a failed login attempt to your :app account.": "There has been a failed login attempt to your :app account.",
+    "Time:": "Time:",
+    "Unknown City": "Unknown City",
+    "Unknown State": "Unknown State",
+    "Unusual Login Time": "Unusual Login Time",
+    "We detected suspicious activity on your :app account.": "We detected suspicious activity on your :app account.",
+    "Your :app account logged in from a new device.": "Your :app account logged in from a new device."
+}

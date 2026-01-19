@@ -28283,6 +28283,25 @@ namespace App\Livewire\Management {
      */
     class ListPaymentMethods extends \Livewire\Component {
             }
+    /**
+     */
+    class Roles extends \Livewire\Component {
+            }
+    /**
+     */
+    class CreateRole extends \Livewire\Component {
+            }
+    /**
+     */
+    class EditRole extends \Livewire\Component {
+            }
+    }
+
+namespace App\Livewire {
+    /**
+     */
+    class BackupManager extends \Livewire\Component {
+            }
     }
 
 namespace App\Livewire\Settings {

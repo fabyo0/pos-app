@@ -65,6 +65,7 @@ final class RolesAndPermissionsSeeder extends Seeder
                 'users.delete',
                 'backups.delete',
                 'settings.edit',
+                'authentication-logs.delete',
             ])->pluck('name')->toArray(),
         );
 
@@ -91,6 +92,8 @@ final class RolesAndPermissionsSeeder extends Seeder
             'payment-methods.view', 'payment-methods.create', 'payment-methods.edit',
             // Backups (view only)
             'backups.view',
+            // Authentication Logs (view only)
+            'authentication-logs.view',
         ]);
 
         // 4. Cashier - POS operations

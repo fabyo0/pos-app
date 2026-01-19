@@ -18,6 +18,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
@@ -77,6 +78,7 @@ final class User extends Authenticatable
     use Notifiable;
     use SoftDeletes;
     use TwoFactorAuthenticatable;
+    use AuthenticationLoggable;
 
     /**
      * The attributes that are mass assignable.

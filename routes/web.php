@@ -9,6 +9,7 @@ use App\Livewire\Customer\Show;
 use App\Livewire\Items\Create;
 use App\Livewire\Items\Edit;
 use App\Livewire\Items\Index;
+use App\Livewire\Management\AuthenticationLogs;
 use App\Livewire\Management\CreateRole;
 use App\Livewire\Management\CreateUser;
 use App\Livewire\Management\EditRole;
@@ -90,6 +91,11 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('/management/roles/{role}/edit', EditRole::class)
         ->name('management.roles.edit')
         ->middleware('can:roles.edit');
+
+    // Authentication Logs
+    Route::get('/management/authentication-logs', AuthenticationLogs::class)
+        ->name('management.authentication-logs')
+        ->middleware('can:authentication-logs.view');
 
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');
