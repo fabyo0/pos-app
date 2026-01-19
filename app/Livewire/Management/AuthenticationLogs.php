@@ -5,11 +5,18 @@ declare(strict_types=1);
 namespace App\Livewire\Management;
 
 use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Support\Contracts\TranslatableContentDriver;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -20,8 +27,10 @@ use Illuminate\Support\Carbon;
 use Livewire\Component;
 use Rappasoft\LaravelAuthenticationLog\Models\AuthenticationLog;
 
-final class AuthenticationLogs extends Component
+final class AuthenticationLogs extends Component implements HasActions, HasSchemas, HasTable
 {
+    use InteractsWithActions;
+    use InteractsWithSchemas;
     use InteractsWithTable;
 
     public function table(Table $table): Table
@@ -174,6 +183,8 @@ final class AuthenticationLogs extends Component
             ->body('Your export is being prepared...')
             ->info()
             ->send();
+
+        // TODO: Implement Excel export
     }
 
     public function clearOldLogs(): void
@@ -187,7 +198,7 @@ final class AuthenticationLogs extends Component
             ->send();
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.management.authentication-logs');
     }
