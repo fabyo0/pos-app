@@ -214,6 +214,29 @@ final class Roles extends Component implements HasActions, HasForms, HasTable
             });
     }
 
+    public function getRoleColor(string $color = 'gray', float $opacity = 1): string
+    {
+        $colors = [
+            'gray' => 'rgb(107, 114, 128)',
+            'red' => 'rgb(239, 68, 68)',
+            'orange' => 'rgb(249, 115, 22)',
+            'yellow' => 'rgb(234, 179, 8)',
+            'green' => 'rgb(34, 197, 94)',
+            'blue' => 'rgb(59, 130, 246)',
+            'indigo' => 'rgb(99, 102, 241)',
+            'purple' => 'rgb(168, 85, 247)',
+            'pink' => 'rgb(236, 72, 153)',
+        ];
+
+        $rgb = $colors[$color] ?? $colors['gray'];
+
+        if ($opacity < 1) {
+            return str_replace('rgb', 'rgba', str_replace(')', ", {$opacity})", $rgb));
+        }
+
+        return $rgb;
+    }
+
     public function render(): Factory|View
     {
         return view('livewire.management.roles');
