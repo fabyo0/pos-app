@@ -30,13 +30,26 @@ enum RoleType: string
     public function color(): string
     {
         return match ($this) {
-            self::SUPER_ADMIN => 'red',
-            self::ADMIN => 'blue',
-            self::MANAGER => 'green',
-            self::CASHIER => 'yellow',
+            self::SUPER_ADMIN => 'danger',
+            self::ADMIN => 'info',
+            self::MANAGER => 'success',
+            self::CASHIER => 'warning',
             self::WAREHOUSE => 'orange',
             self::ACCOUNTANT => 'indigo',
             self::VIEWER => 'gray',
+        };
+    }
+
+    public function icon(): string
+    {
+        return match ($this) {
+            self::SUPER_ADMIN => 'heroicon-o-shield-exclamation',
+            self::ADMIN => 'heroicon-o-shield-check',
+            self::MANAGER => 'heroicon-o-briefcase',
+            self::CASHIER => 'heroicon-o-banknotes',
+            self::WAREHOUSE => 'heroicon-o-cube',
+            self::ACCOUNTANT => 'heroicon-o-calculator',
+            self::VIEWER => 'heroicon-o-eye',
         };
     }
 
@@ -45,5 +58,25 @@ enum RoleType: string
         return collect(self::cases())
             ->mapWithKeys(fn (self $role) => [$role->value => $role->label()])
             ->toArray();
+    }
+
+    public static function fromName(string $name): ?self
+    {
+        return self::tryFrom($name);
+    }
+
+    public static function getColor(string $name): string
+    {
+        return self::tryFrom($name)?->color() ?? 'gray';
+    }
+
+    public static function getIcon(string $name): string
+    {
+        return self::tryFrom($name)?->icon() ?? 'heroicon-o-user';
+    }
+
+    public static function getLabel(string $name): string
+    {
+        return self::tryFrom($name)?->label() ?? ucfirst(str_replace('_', ' ', $name));
     }
 }
