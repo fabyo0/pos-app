@@ -5,55 +5,61 @@ declare(strict_types=1);
 return [
     'dashboard' => [
         'label' => 'Dashboard',
-        'icon' => 'home',
+        'icon' => 'heroicon-o-home',
         'permissions' => ['view'],
     ],
 
     'customers' => [
         'label' => 'Customers',
-        'icon' => 'users',
-        'permissions' => ['view', 'create', 'edit', 'delete', 'export', 'import'],
+        'icon' => 'heroicon-o-users',
+        'permissions' => ['view', 'create', 'edit', 'delete', 'export'],
     ],
 
     'items' => [
         'label' => 'Items',
-        'icon' => 'cube',
-        'permissions' => ['view', 'create', 'edit', 'delete', 'export', 'import'],
+        'icon' => 'heroicon-o-cube',
+        'permissions' => ['view', 'create', 'edit', 'delete', 'export'],
     ],
 
     'sales' => [
         'label' => 'Sales',
-        'icon' => 'shopping-cart',
+        'icon' => 'heroicon-o-shopping-cart',
         'permissions' => ['view', 'create', 'edit', 'delete', 'export', 'refund'],
     ],
 
     'inventory' => [
         'label' => 'Inventory',
-        'icon' => 'queue-list',
-        'permissions' => ['view', 'manage'],
-    ],
-
-    'users' => [
-        'label' => 'Users',
-        'icon' => 'user-group',
-        'permissions' => ['view', 'create', 'edit', 'delete'],
+        'icon' => 'heroicon-o-archive-box',
+        'permissions' => ['view', 'manage', 'adjust', 'transfer'],
     ],
 
     'payment-methods' => [
         'label' => 'Payment Methods',
-        'icon' => 'banknotes',
+        'icon' => 'heroicon-o-credit-card',
+        'permissions' => ['view', 'create', 'edit', 'delete'],
+    ],
+
+    'users' => [
+        'label' => 'Users',
+        'icon' => 'heroicon-o-user-group',
+        'permissions' => ['view', 'create', 'edit', 'delete'],
+    ],
+
+    'roles' => [
+        'label' => 'Roles',
+        'icon' => 'heroicon-o-shield-check',
         'permissions' => ['view', 'create', 'edit', 'delete'],
     ],
 
     'backups' => [
         'label' => 'Backups',
-        'icon' => 'circle-stack',
-        'permissions' => ['view', 'create', 'delete'],
+        'icon' => 'heroicon-o-cloud-arrow-up',
+        'permissions' => ['view', 'create', 'delete', 'download'],
     ],
 
-    'roles' => [
-        'label' => 'Roles & Permissions',
-        'icon' => 'shield-check',
-        'permissions' => ['view', 'create', 'edit', 'delete'],
+    'settings' => [
+        'label' => 'Settings',
+        'icon' => 'heroicon-o-cog-6-tooth',
+        'permissions' => ['view', 'edit'],
     ],
 ];

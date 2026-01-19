@@ -9,7 +9,9 @@ use App\Livewire\Customer\Show;
 use App\Livewire\Items\Create;
 use App\Livewire\Items\Edit;
 use App\Livewire\Items\Index;
+use App\Livewire\Management\CreateRole;
 use App\Livewire\Management\CreateUser;
+use App\Livewire\Management\EditRole;
 use App\Livewire\Management\ListPaymentMethods;
 use App\Livewire\Management\ListUsers;
 use App\Livewire\Management\Roles;
@@ -22,7 +24,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
-Route::get('/', fn(): Factory|View => view('welcome'))->name('home');
+Route::get('/', fn (): Factory|View => view('welcome'))->name('home');
 
 Route::get('dashboard', Livewire\Dashboard\Index::class)
     ->middleware(['auth'])
@@ -80,6 +82,14 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('/management/roles', Roles::class)
         ->name('management.roles')
         ->middleware('can:roles.view');
+
+    Route::get('/management/roles/create', CreateRole::class)
+        ->name('management.roles.create')
+        ->middleware('can:roles.create');
+
+    Route::get('/management/roles/{role}/edit', EditRole::class)
+        ->name('management.roles.edit')
+        ->middleware('can:roles.edit');
 
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');
