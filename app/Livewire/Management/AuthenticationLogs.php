@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Management;
 
+use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -11,7 +12,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
-use Filament\Support\Contracts\TranslatableContentDriver;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -41,14 +41,31 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
             ->columns([
                 TextColumn::make('authenticatable.name')
                     ->label('User')
-                    ->searchable()
-                    ->sortable()
-                    ->description(fn (AuthenticationLog $record): string => $record->authenticatable?->email ?? 'Unknown'),
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->whereHasMorph(
+                            'authenticatable',
+                            [User::class],
+                            function (Builder $q) use ($search) {
+                                $q->where('name', 'like', "%{$search}%")
+                                    ->orWhere('email', 'like', "%{$search}%");
+                            }
+                        );
+                    })
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderBy(
+                            User::select('name')
+                                ->whereColumn('users.id', 'authentication_log.authenticatable_id')
+                                ->where('authentication_log.authenticatable_type', User::class)
+                                ->limit(1),
+                            $direction
+                        );
+                    })
+                    ->description(fn (AuthenticationLog $record): string => $record->authenticatable?->email ?? ''),
 
                 TextColumn::make('event')
                     ->label('Event')
                     ->badge()
-                    ->formatStateUsing(fn (AuthenticationLog $record): string => $this->getEventLabel($record))
+                    ->getStateUsing(fn (AuthenticationLog $record): string => $this->getEventLabel($record))
                     ->color(fn (AuthenticationLog $record): string => $this->getEventColor($record))
                     ->icon(fn (AuthenticationLog $record): string => $this->getEventIcon($record)),
 
@@ -60,8 +77,8 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
 
                 TextColumn::make('user_agent')
                     ->label('Device')
-                    ->formatStateUsing(fn (?string $state): string => $this->parseUserAgent($state))
-                    ->description(fn (?string $state): string => $this->parseBrowser($state))
+                    ->getStateUsing(fn (AuthenticationLog $record): string => $this->parseUserAgent($record->user_agent))
+                    ->description(fn (AuthenticationLog $record): string => $this->parseBrowser($record->user_agent))
                     ->wrap()
                     ->lineClamp(2),
 
@@ -80,11 +97,23 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                     ->falseColor('danger'),
             ])
             ->filters([
-                SelectFilter::make('user')
+                SelectFilter::make('authenticatable_id')
                     ->label('User')
-                    ->relationship('authenticatable', 'name')
+                    ->options(
+                        User::query()
+                            ->orderBy('name')
+                            ->pluck('name', 'id')
+                            ->toArray()
+                    )
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (! empty($data['value'])) {
+                            return $query->where('authenticatable_id', $data['value'])
+                                ->where('authenticatable_type', User::class);
+                        }
+                        return $query;
+                    }),
 
                 SelectFilter::make('event')
                     ->label('Event Type')
@@ -111,11 +140,11 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                     ])
                     ->query(fn (Builder $query, array $data): Builder => $query
                         ->when(
-                            $data['from'],
+                            $data['from'] ?? null,
                             fn (Builder $query, $date): Builder => $query->whereDate('login_at', '>=', $date),
                         )
                         ->when(
-                            $data['until'],
+                            $data['until'] ?? null,
                             fn (Builder $query, $date): Builder => $query->whereDate('login_at', '<=', $date),
                         ))
                     ->indicateUsing(function (array $data): array {
@@ -137,12 +166,15 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                     ->toggle()
                     ->query(fn (Builder $query): Builder => $query->where('login_successful', false)),
             ])
-            ->recordActions([
+            ->actions([
                 Action::make('view')
                     ->label('Details')
                     ->icon('heroicon-o-eye')
                     ->modalHeading('Authentication Log Details')
-                    ->modalContent(fn (AuthenticationLog $record): View => view('livewire.management.partials.auth-log-details', ['log' => $record]))
+                    ->modalContent(fn (AuthenticationLog $record): View => view(
+                        'partials.auth-log-details',
+                        ['log' => $record]
+                    ))
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Close'),
             ])
@@ -234,11 +266,10 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
 
     private function parseUserAgent(?string $userAgent): string
     {
-        if ( ! $userAgent) {
+        if (! $userAgent) {
             return 'Unknown Device';
         }
 
-        // Simple OS detection
         return match (true) {
             str_contains($userAgent, 'Windows') => 'Windows',
             str_contains($userAgent, 'Mac') => 'macOS',
@@ -252,7 +283,7 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
 
     private function parseBrowser(?string $userAgent): string
     {
-        if ( ! $userAgent) {
+        if (! $userAgent) {
             return 'Unknown Browser';
         }
 
