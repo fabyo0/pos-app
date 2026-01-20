@@ -60,8 +60,8 @@ A modern, feature-rich Point of Sale (POS) system built with Laravel 12, Filamen
 **Live Demo:** [https://pos-app-yi7setba.on-forge.com](https://pos-app-yi7setba.on-forge.com/login)
 
 **Demo Credentials:**
-- **Email:** admin@example.com
-- **Password:** password
+- **Email:** demo@demo.com
+- **Password:** demo
 
 ---
 
