@@ -15,6 +15,7 @@ use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\Filter;
@@ -24,8 +25,10 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Rappasoft\LaravelAuthenticationLog\Models\AuthenticationLog;
+use Stevebauman\Location\Facades\Location;
 
 final class AuthenticationLogs extends Component implements HasActions, HasSchemas, HasTable
 {
@@ -69,18 +72,16 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                     ->color(fn (AuthenticationLog $record): string => $this->getEventColor($record))
                     ->icon(fn (AuthenticationLog $record): string => $this->getEventIcon($record)),
 
-                TextColumn::make('ip_address')
-                    ->label('IP Address')
-                    ->searchable()
-                    ->copyable()
-                    ->icon('heroicon-o-globe-alt'),
+                // Location with Flag
+                ViewColumn::make('location')
+                    ->label('Location')
+                    ->view('partials.location-column'),
 
                 TextColumn::make('user_agent')
                     ->label('Device')
                     ->getStateUsing(fn (AuthenticationLog $record): string => $this->parseUserAgent($record->user_agent))
                     ->description(fn (AuthenticationLog $record): string => $this->parseBrowser($record->user_agent))
-                    ->wrap()
-                    ->lineClamp(2),
+                    ->icon(fn (AuthenticationLog $record): string => $this->getDeviceIcon($record->user_agent)),
 
                 TextColumn::make('login_at')
                     ->label('Time')
@@ -112,6 +113,7 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                             return $query->where('authenticatable_id', $data['value'])
                                 ->where('authenticatable_type', User::class);
                         }
+
                         return $query;
                     }),
 
@@ -173,7 +175,10 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                     ->modalHeading('Authentication Log Details')
                     ->modalContent(fn (AuthenticationLog $record): View => view(
                         'partials.auth-log-details',
-                        ['log' => $record]
+                        [
+                            'log' => $record,
+                            'location' => $this->getLocationFromIp($record->ip_address),
+                        ]
                     ))
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Close'),
@@ -206,6 +211,29 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
             ->emptyStateDescription('Authentication events will appear here once users start logging in.')
             ->emptyStateIcon('heroicon-o-finger-print')
             ->poll('30s');
+    }
+
+    /**
+     * Get location data from IP address with caching
+     */
+    public function getLocationFromIp(?string $ip): ?object
+    {
+        if (! $ip || $ip === '127.0.0.1' || str_starts_with($ip, '192.168.') || str_starts_with($ip, '10.')) {
+            return (object) [
+                'countryCode' => 'LOCAL',
+                'countryName' => 'Local Network',
+                'cityName' => 'Localhost',
+                'ip' => $ip,
+            ];
+        }
+
+        return Cache::remember("ip_location_{$ip}", now()->addDay(), function () use ($ip) {
+            try {
+                return Location::get($ip);
+            } catch (\Exception $e) {
+                return null;
+            }
+        });
     }
 
     public function export(): void
@@ -294,6 +322,21 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
             str_contains($userAgent, 'Edg') => 'Edge',
             str_contains($userAgent, 'Opera') || str_contains($userAgent, 'OPR') => 'Opera',
             default => 'Unknown',
+        };
+    }
+
+    private function getDeviceIcon(?string $userAgent): string
+    {
+        if (! $userAgent) {
+            return 'heroicon-o-device-phone-mobile';
+        }
+
+        return match (true) {
+            str_contains($userAgent, 'iPhone'),
+                str_contains($userAgent, 'Android') && str_contains($userAgent, 'Mobile') => 'heroicon-o-device-phone-mobile',
+            str_contains($userAgent, 'iPad'),
+                str_contains($userAgent, 'Android') && ! str_contains($userAgent, 'Mobile') => 'heroicon-o-device-tablet',
+            default => 'heroicon-o-computer-desktop',
         };
     }
 }
