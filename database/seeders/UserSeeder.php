@@ -80,6 +80,18 @@ final class UserSeeder extends Seeder
         $viewer->assignRole('viewer');
         $this->command->line('  ✓ Viewer: viewer@example.com');
 
+        // ============================================
+        // 🎯 DEMO USER - Public Demo Account
+        // ============================================
+        $demo = User::factory()->withoutTwoFactor()->create([
+            'name' => 'Demo User',
+            'email' => 'demo@demo.com',
+            'password' => Hash::make('demo'),
+            'email_verified_at' => now(),
+        ]);
+        $demo->assignRole('demo');
+        $this->command->line('  ✓ Demo User: demo@demo.com (READ-ONLY)');
+
         // Random users with random roles
         $roles = ['cashier', 'warehouse', 'viewer'];
         User::factory(5)->withoutTwoFactor()->create()->each(function (User $user) use ($roles): void {
@@ -93,16 +105,23 @@ final class UserSeeder extends Seeder
 
         // Summary table
         $this->command->table(
-            ['Email', 'Password', 'Role'],
+            ['Email', 'Password', 'Role', 'Access Level'],
             [
-                ['superadmin@example.com', 'password', 'Super Admin'],
-                ['admin@example.com', 'password', 'Admin'],
-                ['manager@example.com', 'password', 'Manager'],
-                ['cashier1@example.com', 'password', 'Cashier'],
-                ['warehouse@example.com', 'password', 'Warehouse'],
-                ['accountant@example.com', 'password', 'Accountant'],
-                ['viewer@example.com', 'password', 'Viewer'],
+                ['superadmin@example.com', 'password', 'Super Admin', 'Full Access'],
+                ['admin@example.com', 'password', 'Admin', 'Almost Full'],
+                ['manager@example.com', 'password', 'Manager', 'Business Ops'],
+                ['cashier1@example.com', 'password', 'Cashier', 'POS Operations'],
+                ['warehouse@example.com', 'password', 'Warehouse', 'Inventory'],
+                ['accountant@example.com', 'password', 'Accountant', 'Financial'],
+                ['viewer@example.com', 'password', 'Viewer', 'Read Only'],
+                ['demo@demo.com', 'demo', 'Demo', '👁️ View Only (Public)'],
             ],
         );
+
+        $this->command->newLine();
+        $this->command->warn('📢 Public Demo Credentials:');
+        $this->command->info('   Email: demo@demo.com');
+        $this->command->info('   Password: demo');
+        $this->command->newLine();
     }
 }

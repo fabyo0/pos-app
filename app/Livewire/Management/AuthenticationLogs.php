@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Management;
 
 use App\Models\User;
+use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -12,7 +13,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
-use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
@@ -48,21 +48,19 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                         return $query->whereHasMorph(
                             'authenticatable',
                             [User::class],
-                            function (Builder $q) use ($search) {
+                            function (Builder $q) use ($search): void {
                                 $q->where('name', 'like', "%{$search}%")
                                     ->orWhere('email', 'like', "%{$search}%");
-                            }
+                            },
                         );
                     })
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderBy(
-                            User::select('name')
-                                ->whereColumn('users.id', 'authentication_log.authenticatable_id')
-                                ->where('authentication_log.authenticatable_type', User::class)
-                                ->limit(1),
-                            $direction
-                        );
-                    })
+                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy(
+                        User::select('name')
+                            ->whereColumn('users.id', 'authentication_log.authenticatable_id')
+                            ->where('authentication_log.authenticatable_type', User::class)
+                            ->limit(1),
+                        $direction,
+                    ))
                     ->description(fn (AuthenticationLog $record): string => $record->authenticatable?->email ?? ''),
 
                 TextColumn::make('event')
@@ -104,12 +102,12 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                         User::query()
                             ->orderBy('name')
                             ->pluck('name', 'id')
-                            ->toArray()
+                            ->toArray(),
                     )
                     ->searchable()
                     ->preload()
                     ->query(function (Builder $query, array $data): Builder {
-                        if (! empty($data['value'])) {
+                        if ( ! empty($data['value'])) {
                             return $query->where('authenticatable_id', $data['value'])
                                 ->where('authenticatable_type', User::class);
                         }
@@ -178,7 +176,7 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                         [
                             'log' => $record,
                             'location' => $this->getLocationFromIp($record->ip_address),
-                        ]
+                        ],
                     ))
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Close'),
@@ -218,7 +216,7 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
      */
     public function getLocationFromIp(?string $ip): ?object
     {
-        if (! $ip || $ip === '127.0.0.1' || str_starts_with($ip, '192.168.') || str_starts_with($ip, '10.')) {
+        if ( ! $ip || $ip === '127.0.0.1' || str_starts_with($ip, '192.168.') || str_starts_with($ip, '10.')) {
             return (object) [
                 'countryCode' => 'LOCAL',
                 'countryName' => 'Local Network',
@@ -230,7 +228,7 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
         return Cache::remember("ip_location_{$ip}", now()->addDay(), function () use ($ip) {
             try {
                 return Location::get($ip);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return null;
             }
         });
@@ -294,7 +292,7 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
 
     private function parseUserAgent(?string $userAgent): string
     {
-        if (! $userAgent) {
+        if ( ! $userAgent) {
             return 'Unknown Device';
         }
 
@@ -311,7 +309,7 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
 
     private function parseBrowser(?string $userAgent): string
     {
-        if (! $userAgent) {
+        if ( ! $userAgent) {
             return 'Unknown Browser';
         }
 
@@ -327,15 +325,15 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
 
     private function getDeviceIcon(?string $userAgent): string
     {
-        if (! $userAgent) {
+        if ( ! $userAgent) {
             return 'heroicon-o-device-phone-mobile';
         }
 
         return match (true) {
             str_contains($userAgent, 'iPhone'),
-                str_contains($userAgent, 'Android') && str_contains($userAgent, 'Mobile') => 'heroicon-o-device-phone-mobile',
+            str_contains($userAgent, 'Android') && str_contains($userAgent, 'Mobile') => 'heroicon-o-device-phone-mobile',
             str_contains($userAgent, 'iPad'),
-                str_contains($userAgent, 'Android') && ! str_contains($userAgent, 'Mobile') => 'heroicon-o-device-tablet',
+            str_contains($userAgent, 'Android') && ! str_contains($userAgent, 'Mobile') => 'heroicon-o-device-tablet',
             default => 'heroicon-o-computer-desktop',
         };
     }

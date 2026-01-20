@@ -174,9 +174,41 @@ final class RolesAndPermissionsSeeder extends Seeder
             'payment-methods.view',
         ]);
 
+        // ============================================
+        // 8. Demo - Public demo account (VIEW ONLY)
+        // ============================================
+        $demo = $this->createRole(
+            name: 'demo',
+            description: 'Public demo account with view-only access. Cannot create, edit, or delete any data.',
+            color: 'purple',
+            sortOrder: 8,
+            isSystem: true, // Prevent deletion
+        );
+        $demo->syncPermissions([
+            // Only VIEW permissions - NO create, edit, delete, export
+            'dashboard.view',
+            'customers.view',
+            'items.view',
+            'sales.view',
+            'inventory.view',
+            'payment-methods.view',
+            // Optionally allow viewing these for demo purposes
+            'users.view',
+            'roles.view',
+            'backups.view',
+            'authentication-logs.view',
+        ]);
+
         $this->command->info('✅ ' . Role::count() . ' roles created.');
         $this->command->newLine();
         $this->command->info('🎉 Roles and permissions seeded successfully!');
+
+        // Display demo info
+        $this->command->newLine();
+        $this->command->warn('📢 Demo Role Created:');
+        $this->command->info('   - View only access (no create/edit/delete)');
+        $this->command->info('   - Can browse: Dashboard, Customers, Items, Sales, Inventory');
+        $this->command->info('   - Cannot: Export data, make changes, access settings');
     }
 
     private function createRole(
