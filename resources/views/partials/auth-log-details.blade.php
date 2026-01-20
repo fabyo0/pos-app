@@ -14,6 +14,11 @@
         </div>
     </div>
 
+    @php
+        $isDemo = auth()->user()?->hasRole('demo');
+        $maskedIp = '•••.•••.•••.•••';
+    @endphp
+
     {{-- Details Grid --}}
     <div class="grid gap-4 sm:grid-cols-2">
         {{-- Event Type --}}
@@ -49,7 +54,17 @@
         <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
             <p class="text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Location</p>
             <div class="mt-2 flex items-center gap-3">
-                @if($location && $location->countryCode && $location->countryCode !== 'LOCAL')
+                @if($isDemo)
+                    <div class="flex size-8 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
+                        <svg class="size-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-zinc-900 dark:text-zinc-100">Hidden</p>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400">Demo modunda gizli</p>
+                    </div>
+                @elseif($location && $location->countryCode && $location->countryCode !== 'LOCAL')
                     <img
                         src="https://flagcdn.com/32x24/{{ strtolower($location->countryCode) }}.png"
                         srcset="https://flagcdn.com/64x48/{{ strtolower($location->countryCode) }}.png 2x"
@@ -74,7 +89,7 @@
                     </div>
                     <div>
                         <p class="font-semibold text-zinc-900 dark:text-zinc-100">Local Network</p>
-                        <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ $log->ip_address }}</p>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ $maskedIp }}</p>
                     </div>
                 @else
                     <div class="flex size-8 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
@@ -85,7 +100,7 @@
                     </div>
                     <div>
                         <p class="font-semibold text-zinc-900 dark:text-zinc-100">Unknown</p>
-                        <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ $log->ip_address }}</p>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ $isDemo ? $maskedIp : $log->ip_address }}</p>
                     </div>
                 @endif
             </div>
@@ -96,19 +111,21 @@
             <p class="text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">IP Address</p>
             <div class="mt-1 flex items-center gap-2">
                 <p class="font-mono font-semibold text-zinc-900 dark:text-zinc-100">
-                    {{ $log->ip_address ?? 'Unknown' }}
+                    {{ $isDemo ? $maskedIp : ($log->ip_address ?? 'Unknown') }}
                 </p>
-                <button
-                    onclick="navigator.clipboard.writeText('{{ $log->ip_address }}')"
-                    class="rounded p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
-                    title="Copy IP"
-                >
-                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                </button>
+                @if(!$isDemo)
+                    <button
+                        onclick="navigator.clipboard.writeText('{{ $log->ip_address }}')"
+                        class="rounded p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+                        title="Copy IP"
+                    >
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                    </button>
+                @endif
             </div>
-            @if($location && $location->countryCode !== 'LOCAL' && ($location->latitude ?? false))
+            @if(!$isDemo && $location && $location->countryCode !== 'LOCAL' && ($location->latitude ?? false))
                 <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                     Lat: {{ $location->latitude }}, Lon: {{ $location->longitude }}
                 </p>
