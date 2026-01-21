@@ -12,7 +12,7 @@ final class SaleFailed extends BaseNotification
 {
     public function __construct(
         private readonly ?Sale $sale,
-        private readonly string $reason
+        private readonly string $reason,
     ) {
         $this->type = NotificationType::SALE_FAILURE;
         $this->priority = NotificationPriority::HIGH;

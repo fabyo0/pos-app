@@ -54,21 +54,21 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                             },
                         );
                     })
-                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy(
+                    ->sortable(query: fn(Builder $query, string $direction): Builder => $query->orderBy(
                         User::select('name')
                             ->whereColumn('users.id', 'authentication_log.authenticatable_id')
                             ->where('authentication_log.authenticatable_type', User::class)
                             ->limit(1),
                         $direction,
                     ))
-                    ->description(fn (AuthenticationLog $record): string => $record->authenticatable?->email ?? ''),
+                    ->description(fn(AuthenticationLog $record): string => $record->authenticatable?->email ?? ''),
 
                 TextColumn::make('event')
                     ->label('Event')
                     ->badge()
-                    ->getStateUsing(fn (AuthenticationLog $record): string => $this->getEventLabel($record))
-                    ->color(fn (AuthenticationLog $record): string => $this->getEventColor($record))
-                    ->icon(fn (AuthenticationLog $record): string => $this->getEventIcon($record)),
+                    ->getStateUsing(fn(AuthenticationLog $record): string => $this->getEventLabel($record))
+                    ->color(fn(AuthenticationLog $record): string => $this->getEventColor($record))
+                    ->icon(fn(AuthenticationLog $record): string => $this->getEventIcon($record)),
 
                 // Location with Flag
                 ViewColumn::make('location')
@@ -77,15 +77,15 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
 
                 TextColumn::make('user_agent')
                     ->label('Device')
-                    ->getStateUsing(fn (AuthenticationLog $record): string => $this->parseUserAgent($record->user_agent))
-                    ->description(fn (AuthenticationLog $record): string => $this->parseBrowser($record->user_agent))
-                    ->icon(fn (AuthenticationLog $record): string => $this->getDeviceIcon($record->user_agent)),
+                    ->getStateUsing(fn(AuthenticationLog $record): string => $this->parseUserAgent($record->user_agent))
+                    ->description(fn(AuthenticationLog $record): string => $this->parseBrowser($record->user_agent))
+                    ->icon(fn(AuthenticationLog $record): string => $this->getDeviceIcon($record->user_agent)),
 
                 TextColumn::make('login_at')
                     ->label('Time')
                     ->dateTime('M d, Y H:i')
                     ->sortable()
-                    ->description(fn (AuthenticationLog $record): string => $record->login_at?->diffForHumans() ?? ''),
+                    ->description(fn(AuthenticationLog $record): string => $record->login_at?->diffForHumans() ?? ''),
 
                 IconColumn::make('login_successful')
                     ->label('Status')
@@ -138,14 +138,14 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                         DatePicker::make('until')
                             ->label('Until'),
                     ])
-                    ->query(fn (Builder $query, array $data): Builder => $query
+                    ->query(fn(Builder $query, array $data): Builder => $query
                         ->when(
                             $data['from'] ?? null,
-                            fn (Builder $query, $date): Builder => $query->whereDate('login_at', '>=', $date),
+                            fn(Builder $query, $date): Builder => $query->whereDate('login_at', '>=', $date),
                         )
                         ->when(
                             $data['until'] ?? null,
-                            fn (Builder $query, $date): Builder => $query->whereDate('login_at', '<=', $date),
+                            fn(Builder $query, $date): Builder => $query->whereDate('login_at', '<=', $date),
                         ))
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
@@ -164,14 +164,14 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                 Filter::make('failed_only')
                     ->label('Failed Attempts Only')
                     ->toggle()
-                    ->query(fn (Builder $query): Builder => $query->where('login_successful', false)),
+                    ->query(fn(Builder $query): Builder => $query->where('login_successful', false)),
             ])
             ->actions([
                 Action::make('view')
                     ->label('Details')
                     ->icon('heroicon-o-eye')
                     ->modalHeading('Authentication Log Details')
-                    ->modalContent(fn (AuthenticationLog $record): View => view(
+                    ->modalContent(fn(AuthenticationLog $record): View => view(
                         'partials.auth-log-details',
                         [
                             'log' => $record,
@@ -187,7 +187,7 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                     ->icon('heroicon-o-trash')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->action(fn (Collection $records) => $records->each->delete())
+                    ->action(fn(Collection $records) => $records->each->delete())
                     ->deselectRecordsAfterCompletion(),
             ])
             ->headerActions([
@@ -195,7 +195,7 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                     ->label('Export')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('gray')
-                    ->action(fn () => $this->export()),
+                    ->action(fn() => $this->export()),
 
                 Action::make('clear_old')
                     ->label('Clear Old Logs')
@@ -203,7 +203,7 @@ final class AuthenticationLogs extends Component implements HasActions, HasSchem
                     ->color('danger')
                     ->requiresConfirmation()
                     ->modalDescription('This will delete all authentication logs older than 30 days.')
-                    ->action(fn () => $this->clearOldLogs()),
+                    ->action(fn() => $this->clearOldLogs()),
             ])
             ->emptyStateHeading('No authentication logs')
             ->emptyStateDescription('Authentication events will appear here once users start logging in.')

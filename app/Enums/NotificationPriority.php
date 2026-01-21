@@ -14,6 +14,14 @@ enum NotificationPriority: string implements HasColor, HasLabel
     case HIGH = 'high';
     case CRITICAL = 'critical';
 
+    public static function toArray(): array
+    {
+        return array_combine(
+            array_column(self::cases(), 'value'),
+            array_map(fn(self $case) => $case->getLabel(), self::cases()),
+        );
+    }
+
     public function getLabel(): string
     {
         return match ($this) {
@@ -42,13 +50,5 @@ enum NotificationPriority: string implements HasColor, HasLabel
             self::HIGH => 'heroicon-o-exclamation-triangle',
             self::CRITICAL => 'heroicon-o-fire',
         };
-    }
-
-    public static function toArray(): array
-    {
-        return array_combine(
-            array_column(self::cases(), 'value'),
-            array_map(fn (self $case) => $case->getLabel(), self::cases())
-        );
     }
 }

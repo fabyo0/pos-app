@@ -23,8 +23,8 @@ final class SaleCompleted extends BaseNotification
 
         if ($this->sale->customer) {
             $this->message .= ' - ' . __('Customer: :name', [
-                    'name' => $this->sale->customer->name,
-                ]);
+                'name' => $this->sale->customer->name,
+            ]);
         }
 
         $this->metadata = [

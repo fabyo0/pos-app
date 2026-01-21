@@ -36,9 +36,9 @@ final class Roles extends Component implements HasActions, HasForms, HasTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Role Name')
-                    ->formatStateUsing(fn (string $state): string => ucwords(str_replace('_', ' ', $state)))
+                    ->formatStateUsing(fn(string $state): string => ucwords(str_replace('_', ' ', $state)))
                     ->badge()
-                    ->color(fn (Role $record): string => $record->color ?? 'gray')
+                    ->color(fn(Role $record): string => $record->color ?? 'gray')
                     ->searchable()
                     ->sortable(),
 
@@ -72,7 +72,7 @@ final class Roles extends Component implements HasActions, HasForms, HasTable
                     ->label('Edit')
                     ->icon('heroicon-o-pencil')
                     ->color('primary')
-                    ->url(fn (Role $record): string => route('management.roles.edit', $record)),
+                    ->url(fn(Role $record): string => route('management.roles.edit', $record)),
 
                 Action::make('delete')
                     ->label('Delete')
@@ -81,13 +81,13 @@ final class Roles extends Component implements HasActions, HasForms, HasTable
                     ->requiresConfirmation()
                     ->modalHeading('Delete Role')
                     ->modalDescription(
-                        fn (Role $record): string => $record->is_system
+                        fn(Role $record): string => $record->is_system
                             ? 'This is a system role and cannot be deleted.'
                             : 'Are you sure you want to delete this role? Users with this role will lose their permissions.',
                     )
                     ->modalSubmitActionLabel('Delete Role')
-                    ->disabled(fn (Role $record): int|bool => $record->is_system)
-                    ->action(fn (Role $record) => $this->deleteRole($record)),
+                    ->disabled(fn(Role $record): int|bool => $record->is_system)
+                    ->action(fn(Role $record) => $this->deleteRole($record)),
             ])
             ->bulkActions([
                 BulkAction::make('delete')
@@ -97,7 +97,7 @@ final class Roles extends Component implements HasActions, HasForms, HasTable
                     ->requiresConfirmation()
                     ->modalHeading('Delete Roles')
                     ->modalDescription('Are you sure you want to delete the selected roles?')
-                    ->action(fn (Collection $records) => $this->deleteMultiple($records)),
+                    ->action(fn(Collection $records) => $this->deleteMultiple($records)),
             ])
             ->headerActions([
                 Action::make('create')
@@ -182,7 +182,7 @@ final class Roles extends Component implements HasActions, HasForms, HasTable
             ->requiresConfirmation()
             ->modalHeading('Delete Role')
             ->modalDescription(
-                fn (array $arguments) => 'Are you sure you want to delete this role? Users with this role will lose their permissions.',
+                fn(array $arguments) => 'Are you sure you want to delete this role? Users with this role will lose their permissions.',
             )
             ->modalSubmitActionLabel('Delete Role')
             ->color('danger')

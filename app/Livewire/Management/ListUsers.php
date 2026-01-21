@@ -22,6 +22,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
@@ -29,7 +30,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
-use Filament\Tables\Contracts\HasTable;
+
 final class ListUsers extends Component implements HasActions, HasSchemas, HasTable
 {
     use InteractsWithActions;
@@ -56,7 +57,7 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                 TextColumn::make('roles.name')
                     ->badge()
                     ->searchable()
-                    ->formatStateUsing(fn ($state): string => match ($state) {
+                    ->formatStateUsing(fn($state): string => match ($state) {
                         'super_admin' => 'Super Admin',
                         'admin' => 'Admin',
                         'manager' => 'Manager',
@@ -66,7 +67,7 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                         'viewer' => 'Viewer',
                         default => ucfirst(str_replace('_', ' ', (string) $state)),
                     })
-                    ->color(fn ($state): string => match ($state) {
+                    ->color(fn($state): string => match ($state) {
                         'super_admin' => 'danger',
                         'admin' => 'info',
                         'manager' => 'success',
@@ -76,7 +77,7 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                         'viewer' => 'gray',
                         default => 'gray',
                     })
-                    ->icon(fn ($state): string => match ($state) {
+                    ->icon(fn($state): string => match ($state) {
                         'super_admin' => 'heroicon-o-shield-exclamation',
                         'admin' => 'heroicon-o-shield-check',
                         'manager' => 'heroicon-o-briefcase',
@@ -115,7 +116,7 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                         'cashier' => 'Cashier',
                     ])
                     ->query(
-                        fn (Builder $query, array $data): Builder => $data['value']
+                        fn(Builder $query, array $data): Builder => $data['value']
                             ? $query->role($data['value'])
                             : $query,
                     ),
@@ -124,11 +125,11 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                 Action::make('#')
                     ->label('Create User')
                     ->icon(Heroicon::Plus)
-                    ->url(fn (): string => route('management.user.create')),
+                    ->url(fn(): string => route('management.user.create')),
             ])
             ->recordActions([
                 ViewAction::make()
-                    ->modalHeading(fn (User $record) => $record->name)
+                    ->modalHeading(fn(User $record) => $record->name)
                     ->modalDescription('User account details and activity')
                     ->modalIcon('heroicon-o-user-circle')
                     ->modalWidth('3xl')
@@ -143,13 +144,13 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                                 ->hiddenLabel()
                                 ->badge()
                                 ->state(
-                                    fn (User $record): string => $record->email_verified_at ? 'Verified' : 'Unverified',
+                                    fn(User $record): string => $record->email_verified_at ? 'Verified' : 'Unverified',
                                 )
                                 ->color(
-                                    fn (User $record): string => $record->email_verified_at ? 'success' : 'warning',
+                                    fn(User $record): string => $record->email_verified_at ? 'success' : 'warning',
                                 )
                                 ->icon(
-                                    fn (User $record): string => $record->email_verified_at ? 'heroicon-m-check-badge' : 'heroicon-m-clock',
+                                    fn(User $record): string => $record->email_verified_at ? 'heroicon-m-check-badge' : 'heroicon-m-clock',
                                 )
                                 ->grow(false),
                         ])->from('sm'),
@@ -162,7 +163,7 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                                     ->badge()
                                     ->color('primary')
                                     ->separator(',')
-                                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                                    ->formatStateUsing(fn(string $state): string => ucfirst($state))
                                     ->placeholder('No roles assigned'),
                             ])
                             ->columnSpanFull(),
@@ -199,33 +200,33 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                                     ->label('Two-Factor Auth')
                                     ->badge()
                                     ->state(
-                                        fn (User $record): string => $record->two_factor_confirmed_at ? 'Enabled' : 'Disabled',
+                                        fn(User $record): string => $record->two_factor_confirmed_at ? 'Enabled' : 'Disabled',
                                     )
                                     ->color(
-                                        fn (User $record): string => $record->two_factor_confirmed_at ? 'success' : 'gray',
+                                        fn(User $record): string => $record->two_factor_confirmed_at ? 'success' : 'gray',
                                     )
                                     ->icon(
-                                        fn (User $record): string => $record->two_factor_confirmed_at ? 'heroicon-m-shield-check' : 'heroicon-m-shield-exclamation',
+                                        fn(User $record): string => $record->two_factor_confirmed_at ? 'heroicon-m-shield-check' : 'heroicon-m-shield-exclamation',
                                     ),
 
                                 TextEntry::make('deleted_at')
                                     ->label('Account Status')
                                     ->badge()
                                     ->state(
-                                        fn (User $record): string => $record->deleted_at ? 'Suspended' : 'Active',
+                                        fn(User $record): string => $record->deleted_at ? 'Suspended' : 'Active',
                                     )
                                     ->color(
-                                        fn (User $record): string => $record->deleted_at ? 'danger' : 'success',
+                                        fn(User $record): string => $record->deleted_at ? 'danger' : 'success',
                                     )
                                     ->icon(
-                                        fn (User $record): string => $record->deleted_at ? 'heroicon-m-x-circle' : 'heroicon-m-check-circle',
+                                        fn(User $record): string => $record->deleted_at ? 'heroicon-m-x-circle' : 'heroicon-m-check-circle',
                                     ),
                             ])
                             ->columns(2)
                             ->columnSpanFull(),
                     ]),
                 EditAction::make()
-                    ->modalHeading(fn (User $record) => $record->name)
+                    ->modalHeading(fn(User $record) => $record->name)
                     ->modalDescription('Edit user account details and permissions')
                     ->modalIcon('heroicon-o-user-circle')
                     ->modalWidth('3xl')
@@ -260,9 +261,9 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                                     ->password()
                                     ->revealable()
                                     ->dehydrateStateUsing(
-                                        fn (?string $state): ?string => filled($state) ? Hash::make($state) : null,
+                                        fn(?string $state): ?string => filled($state) ? Hash::make($state) : null,
                                     )
-                                    ->dehydrated(fn (?string $state): bool => filled($state))
+                                    ->dehydrated(fn(?string $state): bool => filled($state))
                                     ->rule(Password::defaults())
                                     ->columnSpan(1),
 
@@ -287,7 +288,7 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
                                 Select::make('roles')
                                     ->label('Assigned Roles')
                                     ->relationship('roles', 'name')
-                                    ->getOptionLabelFromRecordUsing(fn ($record): string => ucfirst((string) $record->name))
+                                    ->getOptionLabelFromRecordUsing(fn($record): string => ucfirst((string) $record->name))
                                     ->multiple()
                                     ->preload()
                                     ->searchable()
@@ -305,7 +306,7 @@ final class ListUsers extends Component implements HasActions, HasSchemas, HasTa
 
                 DeleteAction::make()
                     ->modalHeading('Delete User')
-                    ->modalDescription(fn (User $record): string => "Are you sure you want to delete {$record->name}? This action cannot be undone.")
+                    ->modalDescription(fn(User $record): string => "Are you sure you want to delete {$record->name}? This action cannot be undone.")
                     ->modalIcon('heroicon-o-trash')
                     ->successNotificationTitle('User deleted successfully'),
             ])

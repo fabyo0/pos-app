@@ -14,6 +14,33 @@ enum RoleType: string
     case ACCOUNTANT = 'accountant';
     case VIEWER = 'viewer';
 
+    public static function options(): array
+    {
+        return collect(self::cases())
+            ->mapWithKeys(fn(self $role) => [$role->value => $role->label()])
+            ->toArray();
+    }
+
+    public static function fromName(string $name): ?self
+    {
+        return self::tryFrom($name);
+    }
+
+    public static function getColor(string $name): string
+    {
+        return self::tryFrom($name)?->color() ?? 'gray';
+    }
+
+    public static function getIcon(string $name): string
+    {
+        return self::tryFrom($name)?->icon() ?? 'heroicon-o-user';
+    }
+
+    public static function getLabel(string $name): string
+    {
+        return self::tryFrom($name)?->label() ?? ucfirst(str_replace('_', ' ', $name));
+    }
+
     public function label(): string
     {
         return match ($this) {
@@ -51,32 +78,5 @@ enum RoleType: string
             self::ACCOUNTANT => 'heroicon-o-calculator',
             self::VIEWER => 'heroicon-o-eye',
         };
-    }
-
-    public static function options(): array
-    {
-        return collect(self::cases())
-            ->mapWithKeys(fn (self $role) => [$role->value => $role->label()])
-            ->toArray();
-    }
-
-    public static function fromName(string $name): ?self
-    {
-        return self::tryFrom($name);
-    }
-
-    public static function getColor(string $name): string
-    {
-        return self::tryFrom($name)?->color() ?? 'gray';
-    }
-
-    public static function getIcon(string $name): string
-    {
-        return self::tryFrom($name)?->icon() ?? 'heroicon-o-user';
-    }
-
-    public static function getLabel(string $name): string
-    {
-        return self::tryFrom($name)?->label() ?? ucfirst(str_replace('_', ' ', $name));
     }
 }

@@ -89,10 +89,10 @@ final class CreateUser extends Component implements HasActions, HasSchemas
                             ->options(
                                 Role::query()
                                     ->pluck('name', 'name')
-                                    ->mapWithKeys(fn ($name) => [
-                                        $name => RoleType::getLabel($name)
+                                    ->mapWithKeys(fn($name) => [
+                                        $name => RoleType::getLabel($name),
                                     ])
-                                    ->toArray()
+                                    ->toArray(),
                             )
                             ->searchable()
                             ->preload()
@@ -116,7 +116,7 @@ final class CreateUser extends Component implements HasActions, HasSchemas
 
         $user = User::create($data);
 
-        if (! empty($roles)) {
+        if ( ! empty($roles)) {
             $user->syncRoles($roles);
         }
 

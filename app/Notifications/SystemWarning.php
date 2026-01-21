@@ -12,7 +12,7 @@ final class SystemWarning extends BaseNotification
     public function __construct(
         string $message,
         array $context = [],
-        NotificationPriority $priority = NotificationPriority::MEDIUM
+        NotificationPriority $priority = NotificationPriority::MEDIUM,
     ) {
         $this->type = NotificationType::SYSTEM_WARNING;
         $this->priority = $priority;

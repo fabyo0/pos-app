@@ -71,14 +71,14 @@ use Spatie\Permission\Traits\HasRoles;
  */
 final class User extends Authenticatable
 {
+    use AuthenticationLoggable;
+
     /** @use HasFactory<UserFactory> */
     use HasFactory;
-
     use HasRoles;
     use Notifiable;
     use SoftDeletes;
     use TwoFactorAuthenticatable;
-    use AuthenticationLoggable;
 
     /**
      * The attributes that are mass assignable.

@@ -101,7 +101,7 @@ final class CreateRole extends Component implements HasActions, HasSchemas
     public function toggleResource(string $resource): void
     {
         $resourcePermissions = array_map(
-            fn ($action) => "{$resource}.{$action}",
+            fn($action) => "{$resource}.{$action}",
             $this->resources[$resource]['permissions'],
         );
 
@@ -158,7 +158,7 @@ final class CreateRole extends Component implements HasActions, HasSchemas
     public function isResourceFullySelected(string $resource): bool
     {
         $resourcePermissions = array_map(
-            fn ($action) => "{$resource}.{$action}",
+            fn($action) => "{$resource}.{$action}",
             $this->resources[$resource]['permissions'],
         );
 

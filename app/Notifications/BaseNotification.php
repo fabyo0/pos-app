@@ -7,7 +7,6 @@ namespace App\Notifications;
 use App\Enums\NotificationPriority;
 use App\Enums\NotificationType;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 abstract class BaseNotification extends Notification

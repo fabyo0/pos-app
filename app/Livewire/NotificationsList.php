@@ -26,6 +26,7 @@ final class NotificationsList extends Component
     public string $priority = '';
 
     public array $selected = [];
+
     public bool $selectAll = false;
 
     public function updatedSelectAll(bool $value): void
@@ -33,7 +34,7 @@ final class NotificationsList extends Component
         if ($value) {
             $this->selected = $this->getNotificationsQuery()
                 ->pluck('id')
-                ->map(fn ($id) => (string) $id)
+                ->map(fn($id) => (string) $id)
                 ->toArray();
         } else {
             $this->selected = [];
@@ -152,6 +153,17 @@ final class NotificationsList extends Component
         };
     }
 
+    public function render(): View
+    {
+        return view('livewire.notifications-list', [
+            'notifications' => $this->getNotificationsQuery()->paginate(15),
+            'unreadCount' => auth()->user()->unreadNotifications()->count(),
+            'totalCount' => auth()->user()->notifications()->count(),
+            'types' => NotificationType::toArray(),
+            'priorities' => NotificationPriority::toArray(),
+        ]);
+    }
+
     private function getNotificationsQuery()
     {
         $query = auth()->user()->notifications();
@@ -174,16 +186,5 @@ final class NotificationsList extends Component
         }
 
         return $query->latest();
-    }
-
-    public function render(): View
-    {
-        return view('livewire.notifications-list', [
-            'notifications' => $this->getNotificationsQuery()->paginate(15),
-            'unreadCount' => auth()->user()->unreadNotifications()->count(),
-            'totalCount' => auth()->user()->notifications()->count(),
-            'types' => NotificationType::toArray(),
-            'priorities' => NotificationPriority::toArray(),
-        ]);
     }
 }

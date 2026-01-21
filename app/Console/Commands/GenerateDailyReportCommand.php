@@ -33,6 +33,7 @@ final class GenerateDailyReportCommand extends Command
 
         if ($admins->isEmpty()) {
             $this->warn('No admin users found to notify.');
+
             return self::SUCCESS;
         }
 

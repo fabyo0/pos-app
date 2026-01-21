@@ -65,10 +65,10 @@ final class EditRole extends Component implements HasActions, HasSchemas
                                     ->maxLength(255)
                                     ->placeholder('e.g., warehouse_manager')
                                     ->helperText($this->role->is_system ? 'System role names cannot be changed' : 'Use lowercase with underscores')
-                                    ->disabled((bool)$this->role->is_system)
+                                    ->disabled((bool) $this->role->is_system)
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function (TextInput $component, $state): void {
-                                        if (! $this->role->is_system) {
+                                        if ( ! $this->role->is_system) {
                                             $component->state(str($state)->lower()->replace(' ', '_')->toString());
                                         }
                                     }),
@@ -113,7 +113,7 @@ final class EditRole extends Component implements HasActions, HasSchemas
     public function toggleResource(string $resource): void
     {
         $resourcePermissions = array_map(
-            fn ($action) => "{$resource}.{$action}",
+            fn($action) => "{$resource}.{$action}",
             $this->resources[$resource]['permissions'],
         );
 
@@ -170,7 +170,7 @@ final class EditRole extends Component implements HasActions, HasSchemas
     public function isResourceFullySelected(string $resource): bool
     {
         $resourcePermissions = array_map(
-            fn ($action) => "{$resource}.{$action}",
+            fn($action) => "{$resource}.{$action}",
             $this->resources[$resource]['permissions'],
         );
 
@@ -223,7 +223,7 @@ final class EditRole extends Component implements HasActions, HasSchemas
             'color' => $data['color'],
         ];
 
-        if (! $this->role->is_system) {
+        if ( ! $this->role->is_system) {
             $updateData['name'] = $data['name'];
         }
 
@@ -234,7 +234,7 @@ final class EditRole extends Component implements HasActions, HasSchemas
 
         Notification::make()
             ->title('Role Updated')
-            ->body("Role has been updated with " . count($this->selectedPermissions) . ' permissions.')
+            ->body('Role has been updated with ' . count($this->selectedPermissions) . ' permissions.')
             ->success()
             ->send();
 

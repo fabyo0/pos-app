@@ -15,7 +15,7 @@ final class InventoryObserver
 {
     public function updated(Item $item): void
     {
-        if (!$item->wasChanged('quantity')) {
+        if ( ! $item->wasChanged('quantity')) {
             return;
         }
 

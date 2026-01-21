@@ -11,7 +11,7 @@ final class SystemError extends BaseNotification
 {
     public function __construct(
         string $message,
-        array $context = []
+        array $context = [],
     ) {
         $this->type = NotificationType::SYSTEM_ERROR;
         $this->priority = NotificationPriority::CRITICAL;

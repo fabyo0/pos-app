@@ -12,7 +12,7 @@ final class DailyReportReady extends BaseNotification
 {
     public function __construct(
         private readonly CarbonInterface $reportDate,
-        private readonly array $statistics
+        private readonly array $statistics,
     ) {
         $this->type = NotificationType::DAILY_REPORT;
         $this->priority = NotificationPriority::LOW;

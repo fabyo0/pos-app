@@ -12,7 +12,7 @@ final class LowStockAlert extends BaseNotification
 {
     public function __construct(
         private readonly Item $item,
-        private readonly int $currentQuantity
+        private readonly int $currentQuantity,
     ) {
         $this->type = NotificationType::LOW_STOCK;
         $this->priority = $this->determinePriority();

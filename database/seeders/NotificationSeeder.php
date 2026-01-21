@@ -27,6 +27,7 @@ final class NotificationSeeder extends Seeder
 
         if ($admins->isEmpty()) {
             $this->command->warn('No admin users found. Skipping notifications.');
+
             return;
         }
 
