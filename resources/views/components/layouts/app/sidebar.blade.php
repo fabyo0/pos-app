@@ -89,51 +89,7 @@
         </flux:tooltip>
 
         <!-- Notifications -->
-        <flux:dropdown position="bottom" align="end">
-            <flux:tooltip :content="__('Notifications')" position="bottom">
-                <flux:navbar.item icon="bell" class="relative">
-                    <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
-                        3
-                    </span>
-                </flux:navbar.item>
-            </flux:tooltip>
-
-            <flux:menu class="w-80">
-                <flux:menu.heading class="flex items-center justify-between">
-                    {{ __('Notifications') }}
-                    <flux:badge size="sm" color="red">3 {{ __('new') }}</flux:badge>
-                </flux:menu.heading>
-
-                <flux:menu.separator/>
-
-                <flux:menu.item icon="exclamation-triangle" class="text-amber-600 dark:text-amber-400">
-                    <div class="flex flex-col">
-                        <span class="font-medium">{{ __('Low Stock Alert') }}</span>
-                        <span class="text-xs text-zinc-500">{{ __('5 items running low') }}</span>
-                    </div>
-                </flux:menu.item>
-
-                <flux:menu.item icon="shopping-cart" class="text-green-600 dark:text-green-400">
-                    <div class="flex flex-col">
-                        <span class="font-medium">{{ __('New Order') }}</span>
-                        <span class="text-xs text-zinc-500">{{ __('Order #1234 received') }}</span>
-                    </div>
-                </flux:menu.item>
-
-                <flux:menu.item icon="user-plus" class="text-blue-600 dark:text-blue-400">
-                    <div class="flex flex-col">
-                        <span class="font-medium">{{ __('New Customer') }}</span>
-                        <span class="text-xs text-zinc-500">{{ __('John Doe registered') }}</span>
-                    </div>
-                </flux:menu.item>
-
-                <flux:menu.separator/>
-
-                <flux:menu.item icon="eye" class="justify-center text-center">
-                    {{ __('View all notifications') }}
-                </flux:menu.item>
-            </flux:menu>
-        </flux:dropdown>
+        <livewire:notification-dropdown />
     </flux:navbar>
 
     <!-- User Menu -->
@@ -382,7 +338,7 @@
 
         {{-- System --}}
         @canany(['backups.view', 'settings.view', 'authentication-logs.view'])
-            <flux:navlist.group :heading="__('System')" expandable :expanded="request()->routeIs('backups.*', 'settings.*', 'management.authentication-logs*')">
+            <flux:navlist.group :heading="__('System')" expandable :expanded="request()->routeIs('backups.*', 'settings.*', 'management.authentication-logs*', 'notifications.*')">
                 @can('authentication-logs.view')
                     <flux:navlist.item
                         wire:navigate
@@ -393,6 +349,15 @@
                         {{ __('Auth Logs') }}
                     </flux:navlist.item>
                 @endcan
+
+                <flux:navlist.item
+                    wire:navigate
+                    icon="bell"
+                    :href="route('notifications.index')"
+                    :current="request()->routeIs('notifications.*')"
+                >
+                    {{ __('Notifications') }}
+                </flux:navlist.item>
 
                 @can('backups.view')
                     <flux:navlist.item

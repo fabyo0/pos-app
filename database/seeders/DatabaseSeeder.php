@@ -11,7 +11,7 @@ final class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run() : void
+    public function run(): void
     {
         $this->call([
             RolesAndPermissionsSeeder::class,
@@ -20,6 +20,7 @@ final class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             SaleSeeder::class,
             UserSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }

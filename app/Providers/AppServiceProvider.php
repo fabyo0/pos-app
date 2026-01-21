@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\Item;
+use App\Models\Sale;
+use App\Observers\InventoryObserver;
+use App\Observers\SaleObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +31,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configurePasswordValidation();
         $this->configureCarbonImmutable();
         $this->configureRateLimiting();
+        $this->loadObserver();
     }
 
     private function configureCommands(): void
@@ -55,7 +60,7 @@ final class AppServiceProvider extends ServiceProvider
     private function configurePasswordValidation(): void
     {
         Password::defaults(
-            fn() => $this->app->isProduction()
+            fn () => $this->app->isProduction()
                 ? Password::min(8)
                     ->uncompromised()
                     ->letters()
@@ -75,24 +80,30 @@ final class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for(
             'global',
-            fn(Request $request) => Limit::perMinute(60)->by($request->ip()),
+            fn (Request $request) => Limit::perMinute(60)->by($request->ip()),
         );
 
         RateLimiter::for(
             'api',
-            fn(Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()),
+            fn (Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()),
         );
 
         RateLimiter::for(
             'auth',
-            fn(Request $request) => Limit::perMinute(5)->by($request->ip()),
+            fn (Request $request) => Limit::perMinute(5)->by($request->ip()),
         );
 
         RateLimiter::for(
             'login',
-            fn(Request $request) => Limit::perMinute(5)
+            fn (Request $request) => Limit::perMinute(5)
                 ->by($request->input('email') . '|' . $request->ip())
-                ->response(fn() => response()->json(['message' => 'Too many login attempts.'], 429)),
+                ->response(fn () => response()->json(['message' => 'Too many login attempts.'], 429)),
         );
+    }
+
+    private function loadObserver(): void
+    {
+        Item::observe(InventoryObserver::class);
+        Sale::observe(SaleObserver::class);
     }
 }

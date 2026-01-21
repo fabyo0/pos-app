@@ -26,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property-read Inventory|null $inventory
  * @property-read Collection<int, SalesItem> $salesItems
  * @property-read int|null $sales_items_count
+ *
  * @method static Builder<static>|Item active()
  * @method static ItemFactory factory($count = null, $state = [])
  * @method static Builder<static>|Item inactive()
@@ -39,6 +40,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Item whereSku($value)
  * @method static Builder<static>|Item whereStatus($value)
  * @method static Builder<static>|Item whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 final class Item extends Model
@@ -51,7 +53,7 @@ final class Item extends Model
         'sku',
         'price',
         'status',
-        'low_stock_threshold'
+        'low_stock_threshold',
     ];
 
     public function inventory(): HasOne
@@ -68,7 +70,7 @@ final class Item extends Model
     {
         return [
             'status' => ItemStatus::class,
-            'low_stock_threshold' => 'integer'
+            'low_stock_threshold' => 'integer',
         ];
     }
 

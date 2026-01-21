@@ -24,3 +24,12 @@ Schedule::command('backup:run --only-db')
     ->timezone('Europe/Istanbul')
     ->emailOutputOnFailure(env('BACKUP_MAIL_TO'))
     ->appendOutputTo(storage_path('logs/backup-run.log'));
+
+
+Schedule::command('notifications:generate-daily-report')
+    ->dailyAt(config('notifications.daily_report_time', '08:00'))
+    ->description('Generate daily sales report');
+
+Schedule::command('notifications:cleanup')
+    ->daily()
+    ->description('Cleanup old read notifications');

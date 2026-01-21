@@ -16,6 +16,7 @@ use App\Livewire\Management\EditRole;
 use App\Livewire\Management\ListPaymentMethods;
 use App\Livewire\Management\ListUsers;
 use App\Livewire\Management\Roles;
+use App\Livewire\NotificationsList;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -30,6 +31,16 @@ Route::get('/', fn (): Factory|View => view('welcome'))->name('home');
 Route::get('dashboard', Livewire\Dashboard\Index::class)
     ->middleware(['auth'])
     ->name('dashboard');
+
+Route::get('/test',function (){
+
+    $user = \App\Models\User::find(1);
+    $user->notify(new \App\Notifications\SystemWarning('Test bildirim'));
+   $count =  \DB::table('notifications')->count();
+
+   dd($count);
+});
+
 
 // Social Auth
 Route::get('auth/{provider}/redirect', [SocialiteController::class, 'loginSocial'])
@@ -96,6 +107,10 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('/management/authentication-logs', AuthenticationLogs::class)
         ->name('management.authentication-logs')
         ->middleware('can:authentication-logs.view');
+
+
+    // Notifications
+    Route::get('/notifications', NotificationsList::class)->name('notifications.index');
 
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');
