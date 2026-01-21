@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\RoleType;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -26,7 +27,6 @@ final class SocialiteController
 
     public function callBackSocial(Request $request, string $provider)
     {
-
         $this->validateProvider($request);
 
         $response = Socialite::driver($provider)->user();
@@ -35,10 +35,13 @@ final class SocialiteController
             ['email' => $response->getEmail()],
             ['password' => Str::password()],
         );
+
         $data = [$provider . '_id' => $response->getId()];
 
         if ($user->wasRecentlyCreated) {
             $data['name'] = $response->getName() ?? $response->getNickname();
+
+            $user->assignRole(RoleType::CASHIER->value);
 
             event(new Registered($user));
         }
