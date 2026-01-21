@@ -51,6 +51,7 @@ final class Item extends Model
         'sku',
         'price',
         'status',
+        'low_stock_threshold'
     ];
 
     public function inventory(): HasOne
@@ -67,6 +68,7 @@ final class Item extends Model
     {
         return [
             'status' => ItemStatus::class,
+            'low_stock_threshold' => 'integer'
         ];
     }
 
